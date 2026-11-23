@@ -122,21 +122,23 @@
 </div>
 
 <div class="sheet" id="sh-moon">
-  <h2>Enhance my craters</h2>
-  <div class="row"><div class="lab"><span>Sharpen my craters</span><span id="v-enhance"></span></div><div class="hint">Makes the craters already in your map crisper, up to real-Moon detail levels</div><input id="enhance" type="range" min="0" max="2" step="0.05" value="1"></div>
-  <div class="row"><div class="lab"><span>Real Moon fine texture</span><span id="v-realDetail"></span></div><div class="hint">Fine regolith and tiny-crater texture taken from the real Moon, only at scales smaller than your map can show</div><input id="realDetail" type="range" min="0" max="2" step="0.05" value="1"></div>
-  <h2>Optional extras</h2>
-  <div class="row"><div class="lab"><span>Extra random craters</span><span id="v-craterDensity"></span></div><input id="craterDensity" type="range" min="0" max="1" step="0.02" value="0"></div>
-  <div class="row"><div class="lab"><span>Biggest new craters</span><span id="v-craterMax"></span></div><div class="hint">Size of the largest added craters, in pixels of your original map</div><input id="craterMax" type="range" min="1" max="12" step="0.5" value="6"></div>
-  <div class="row"><div class="lab"><span>Fewer craters on maria</span><span id="v-mareCraters"></span></div><div class="hint">Real maria are young, smooth lava plains with few craters</div><input id="mareCraters" type="range" min="0" max="1" step="0.05" value="1"></div>
+  <h2>Craters</h2>
+  <div class="row"><div class="lab"><span>Crater density</span><span id="v-craterDensity"></span></div><div class="hint">A real-Moon crater field: overlapping craters of every size, from the biggest down to single pixels, sharp at any export size</div><input id="craterDensity" type="range" min="0" max="1" step="0.02" value="0.75"></div>
+  <div class="row"><div class="lab"><span>Biggest craters</span><span id="v-craterMax"></span></div><div class="hint">Radius of the largest craters, in pixels of your original map. Big ones get flat floors, terraced walls and central peaks</div><input id="craterMax" type="range" min="2" max="40" step="1" value="24"></div>
+  <div class="row"><div class="lab"><span>Fewer craters on maria</span><span id="v-mareCraters"></span></div><div class="hint">Real maria are young, smooth lava plains with mostly small craters</div><input id="mareCraters" type="range" min="0" max="1" step="0.05" value="1"></div>
   <div class="row"><div class="lab"><span>Bright young craters &amp; rays</span><span id="v-brightCraters"></span></div><input id="brightCraters" type="range" min="0" max="2" step="0.05" value="1"></div>
+  <h2>Your map</h2>
+  <div class="row"><div class="lab"><span>Remove noise &amp; blockiness</span><span id="v-soften"></span></div><div class="hint">Cleans grain, speckles and JPEG blocks out of your map so only real features are kept</div><input id="soften" type="range" min="0" max="1" step="0.05" value="0.8"></div>
+  <div class="row"><div class="lab"><span>Sharpen my features</span><span id="v-enhance"></span></div><div class="hint">Makes the craters, ridges and canyons already in your map crisper</div><input id="enhance" type="range" min="0" max="2" step="0.05" value="1"></div>
+  <div class="row"><div class="lab"><span>Real Moon fine texture</span><span id="v-realDetail"></span></div><div class="hint">Fine regolith texture taken from the real Moon, only at scales smaller than your map can show</div><input id="realDetail" type="range" min="0" max="2" step="0.05" value="0.6"></div>
   <h2>Light &amp; relief</h2>
-  <div class="row"><div class="lab"><span>Relief strength</span><span id="v-mrelief"></span></div><input id="mrelief" type="range" min="0" max="2" step="0.05" value="0.85"></div>
-  <div class="row"><div class="lab"><span>Crater shadows</span><span id="v-shadows"></span></div><input id="shadows" type="range" min="0" max="1.5" step="0.05" value="1"></div>
+  <div class="row"><div class="lab"><span>Relief strength</span><span id="v-mrelief"></span></div><input id="mrelief" type="range" min="0" max="2" step="0.05" value="0.7"></div>
+  <div class="row"><div class="lab"><span>Crater shadows</span><span id="v-shadows"></span></div><input id="shadows" type="range" min="0" max="1.5" step="0.05" value="0.7"></div>
   <div class="row"><div class="lab"><span>Sun direction</span><span id="v-sunAz"></span></div><input id="sunAz" type="range" min="0" max="360" step="5" value="135"></div>
+  <div class="row"><div class="lab"><span>Sun height</span><span id="v-sunEl"></span></div><div class="hint">Low sun = long shadows and strong relief; high sun = flatter, full-Moon mosaic look</div><input id="sunEl" type="range" min="10" max="80" step="1" value="40"></div>
   <h2>Maria &amp; surface</h2>
   <div class="row"><div class="lab"><span>Mare edge sharpness</span><span id="v-mareSharp"></span></div><div class="hint">How crisply the dark maria meet the bright highlands</div><input id="mareSharp" type="range" min="0" max="2" step="0.05" value="1"></div>
-  <div class="row"><div class="lab"><span>Calm over-sharp noise</span><span id="v-soften"></span></div><div class="hint">Softens harsh, noisy detail down to real-Moon levels</div><input id="soften" type="range" min="0" max="1" step="0.05" value="0.8"></div>
+  <div class="row"><div class="lab"><span>Mare wrinkle ridges</span><span id="v-ridges"></span></div><div class="hint">Low winding ridges across the lava plains</div><input id="ridges" type="range" min="0" max="2" step="0.05" value="1"></div>
   <div class="row"><div class="lab"><span>Match real Moon tones</span><span id="v-matchMoon"></span></div><input id="matchMoon" type="range" min="0" max="1" step="0.05" value="0.7"></div>
   <div class="row"><div class="lab"><span>Regolith grain</span><span id="v-grain"></span></div><input id="grain" type="range" min="0" max="2" step="0.05" value="1"></div>
   <div class="row"><div class="lab"><span>Crater seed</span><span></span></div><div class="seg"><input id="mseed" type="number" value="7" style="flex:1"><button class="btn" id="mreseed" style="flex:0 0 auto">New craters</button></div></div>
@@ -672,21 +674,30 @@ function moonAnalyze(inp, P, progress, ref, detail){
   progress = progress || function(){};
   const W = inp.W, H = inp.H, N = W*H, rgba = inp.rgba;
   const own = moonStats(rgba, W, H);
-  progress(0.15, 'Finding maria and highlands');
-  const L = new Float32Array(N); for(let i=0;i<N;i++) L[i] = lum(rgba[4*i],rgba[4*i+1],rgba[4*i+2]);
-  // --- tame over-sharp noise: limit the finest detail to the real Moon's texture strength
-  const b1 = blur(L,W,H,0.9), hp = new Float32Array(N), ae = new Float32Array(N);
-  for(let i=0;i<N;i++){ hp[i] = L[i]-b1[i]; ae[i] = Math.abs(hp[i]); }
-  const E = blur(ae,W,H,3);
-  const target = ref ? (ref.eHigh+ref.eMare)*0.5*(ref.W/W) : 6;
+  progress(0.1, 'Cleaning noise from your map');
+  const L0 = new Float32Array(N); for(let i=0;i<N;i++) L0[i] = lum(rgba[4*i],rgba[4*i+1],rgba[4*i+2]);
+  // --- 1) speckle / JPEG-block removal: 3x3 median, blended by "soften"
+  const L = new Float32Array(N); { const v = new Float32Array(9);
+    for(let y=0;y<H;y++){ const ya = Math.max(0,y-1)*W, yb = y*W, yc = Math.min(H-1,y+1)*W;
+      for(let x=0;x<W;x++){ const xa = (x-1+W)%W, xc = (x+1)%W;
+        v[0]=L0[ya+xa]; v[1]=L0[ya+x]; v[2]=L0[ya+xc]; v[3]=L0[yb+xa]; v[4]=L0[yb+x]; v[5]=L0[yb+xc]; v[6]=L0[yc+xa]; v[7]=L0[yc+x]; v[8]=L0[yc+xc];
+        for(let a=1;a<9;a++){ const t = v[a]; let b = a-1; while(b>=0 && v[b]>t){ v[b+1]=v[b]; b--; } v[b+1]=t; }
+        L[yb+x] = L0[yb+x] + (v[4]-L0[yb+x])*P.soften; } } }
+  progress(0.25, 'Separating your features from noise');
+  // --- 2) multi-scale shrinkage: tiny wiggles (noise) are removed, real features are kept and optionally sharpened
+  const B1 = blur(L,W,H,1.0), B2 = blur(L,W,H,2.2), B3 = blur(L,W,H,4.5);
+  const mad = (a, b) => { const s = []; for(let i=0;i<N;i+=7){ const y = (i/W)|0, la = Math.abs(90-(y+0.5)*180/H); if(la < 60) s.push(Math.abs(a[i]-b[i])); }
+    s.sort((p,q)=>p-q); return (s[s.length>>1] || 1)/0.6745; };
+  const n1 = mad(L,B1), n2 = mad(B1,B2), n3 = mad(B2,B3);
+  const so = P.soften, en = P.enhance;
+  const t1 = 1.6*n1*so, t2 = 0.9*n2*so, t3 = 0.35*n3*so;
+  const gar = (d, t) => { const a = Math.abs(d); return a <= t ? 0 : d - t*t/d; };
   for(let y=0;y<H;y++){ const la = Math.abs(90-(y+0.5)*180/H), polar = clamp((la-68)/14,0,1);
     for(let x=0;x<W;x++){ const i = y*W+x;
-      let g = clamp((target*P.softenLimit)/Math.max(E[i],1e-3), 0.5, 1 + 0.45*P.enhance); g = Math.pow(g, g < 1 ? P.soften : 1);
-      g *= 1 - polar*0.92*P.soften;                       // stretched polar rows are mostly noise
-      L[i] = b1[i] + hp[i]*g; } }
-  progress(0.4, 'Sharpening mare boundaries');
-  // --- mare score: signed distance-like field from the tone threshold, smoothed at the input scale
-  // maria = large connected dark regions only (not shadows, canyons or small dark spots), away from the poles
+      const d1 = gar(L[i]-B1[i], t1), d2 = gar(B1[i]-B2[i], t2), d3 = gar(B2[i]-B3[i], t3);
+      L[i] = B3[i] + (d3*(1+0.25*en) + d2*(1+0.45*en) + d1*(0.55+0.3*en)*(1-0.6*so))*(1 - polar*0.92*so); } }
+  progress(0.45, 'Sharpening mare boundaries');
+  // --- mare score: maria = large connected dark regions only, away from the poles
   const Lb = blur(L,W,H,Math.max(1.6, W/500));
   const dark = new Uint8Array(N);
   for(let y=0;y<H;y++){ const la = Math.abs(90-(y+0.5)*180/H); if(la > 62) continue; for(let x=0;x<W;x++){ const i = y*W+x; if(Lb[i] < own.thr) dark[i] = 1; } }
@@ -696,152 +707,292 @@ function moonAnalyze(inp, P, progress, ref, detail){
       while(qh < qt){ const i = q[qh++], y = (i/W)|0, x = i-y*W; const nb = [y*W+(x+1)%W, y*W+(x-1+W)%W, y>0?i-W:-1, y<H-1?i+W:-1];
         for(const j of nb) if(j>=0 && dark[j] && !seen[j]){ seen[j] = 1; q[qt++] = j; } }
       if(qt >= minA) for(let k=0;k<qt;k++) mareM[q[k]] = 1; } }
-  // score: continuous inside/outside measure from the tone, but only near real maria
   const near = blur(mareM,W,H,3);
   const spread = Math.max(6, (own.high-own.mare)*0.5);
   const score = new Float32Array(N);
   for(let i=0;i<N;i++){ const t = (own.thr - Lb[i])/spread; const g = clamp(near[i]*4,0,1); score[i] = t*g + (g < 1 ? -1.5*(1-g) : 0); }
   // --- small colour tint field (keeps any hue the artist used)
   const tr = new Float32Array(N), tb = new Float32Array(N);
-  for(let i=0;i<N;i++){ tr[i] = rgba[4*i]-L[i]; tb[i] = rgba[4*i+2]-L[i]; }
+  for(let i=0;i<N;i++){ tr[i] = rgba[4*i]-L0[i]; tb[i] = rgba[4*i+2]-L0[i]; }
   progress(0.8, 'Preparing crater synthesis');
-  return { W, H, L, score:blur(score,W,H,0.8), tr:blur(tr,W,H,2), tb:blur(tb,W,H,2), own, ref, detail: detail || null };
+  return { W, H, L, score:blur(score,W,H,0.8), tr:blur(tr,W,H,3), tb:blur(tb,W,H,3), own, ref, detail: detail || null };
 }
 function moonDetailBand(F, P, OW){
   const D = F.detail; if(!D) return null;
   const key = OW + ':' + F.W; if(F._band && F._bandKey === key) return F._band;
-  const dW = D.W, dH = D.H, inPxOut = OW/F.W;                 // output px per input px
-  const sig = Math.max(0.8, inPxOut*0.6);                     // keep only features finer than the input can show
+  const dW = D.W, dH = D.H, k = clamp(OW/dW, 1, 2);            // detail texel ≈ 1–2 output px: always crisp
+  const inPxTex = OW/F.W/k;                                     // one input px in detail texels
+  const sig = clamp(inPxTex*0.6, 0.8, 4);                       // keep only features finer than the input can show
   const L = D.L, lo = blur(L, dW, dH, sig), base = blur(L, dW, dH, Math.max(4, sig*6)), band = new Float32Array(dW*dH);
   for(let i=0;i<band.length;i++) band[i] = (L[i]-lo[i])/Math.max(base[i], 20);
   F._band = band; F._bandKey = key; return band;
 }
-function moonSynthRows(F, P, OW, OH, y0, y1){
-  const band = P.realDetail > 0 ? moonDetailBand(F, P, OW) : null; const dW = F.detail ? F.detail.W : 1, dH = F.detail ? F.detail.H : 1;
-  const W = F.W, H = F.H, out = new Uint8ClampedArray((y1-y0)*OW*4);
+/* integer hash + step for crater randoms */
+function ihash(x, y, z, s){ let h = Math.imul(x, 0x27d4eb2d) ^ Math.imul(y, 0x165667b1) ^ Math.imul(z, 0x9e3779b1) ^ Math.imul(s, 0x85ebca6b);
+  h = Math.imul(h ^ (h >>> 15), 0x2c1b3c6d); h = Math.imul(h ^ (h >>> 12), 0x297a2d39); return (h ^ (h >>> 15)) >>> 0; }
+function inext(h){ h = Math.imul(h ^ (h >>> 16), 0x7feb352d); h = Math.imul(h ^ (h >>> 15), 0x846ca68b); return (h ^ (h >>> 16)) >>> 0; }
+const U32 = 1/4294967296;
+/* Crater layers. Each layer is a 3-D jittered grid of candidate centres, at most `slots` craters per cell,
+   with every crater's footprint (`reach`) ≤ half a cell so no crater is ever clipped. Craters are splatted
+   into band buffers, so the cost follows the area they cover, not the number of candidates. */
+function moonCraterLayers(P, W, OW){
+  const PI2 = 2*PI, inPx = PI2/W, outPx = PI2/OW;
+  const Rmax = Math.min(0.1, inPx*P.craterMax);
+  const layers = [];
+  if(P.craterDensity > 0){ let c = Rmax/0.25, lv = 0;
+    while(0.25*c > 1.4*outPx && lv < 16){ const top = lv < 2 ? 0.7 + 0.2*lv : 1;
+      layers.push({c, lv, rMin:0.09, rMax:0.25, reachK:2, rays:false, occ:Math.min(0.95, P.craterDensity*1.05)*top, slots:lv < 2 ? 2 : 3}); c *= 0.62; lv++; } }
+  if(P.brightCraters > 0){ let c = Rmax*0.55/0.0625;
+    for(let k=0;k<3;k++){ if(0.0625*c > 1.5*outPx) layers.push({c, lv:20+k, rMin:0.03, rMax:0.0625, reachK:8, rays:true, occ:Math.min(1,P.brightCraters)*[0.3,0.3,0.3][k], slots:1}); c *= 0.5; } }
+  return {layers, Rmax, inPx, outPx};
+}
+/* Renders output rows y0..y1 of an OW×OH moon map. With xa/bw only columns xa..xa+bw-1 (wrapping) are rendered,
+   which is how the globe shows deep-zoom detail patches without rendering the whole planet at that size. */
+function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
+  const band = (P.realDetail > 0 && !heightOut) ? moonDetailBand(F, P, OW) : null; const dW = F.detail ? F.detail.W : 1, dH = F.detail ? F.detail.H : 1;
+  const BW = (bw > 0 && bw < OW) ? bw : OW, XA = BW === OW ? 0 : (((xa|0) % OW) + OW) % OW;
+  const W = F.W, H = F.H, nR = y1-y0, NP = nR*BW, out = new Uint8ClampedArray(NP*4);
   const S = P.seed|0, PI2 = 2*PI;
   function bil(f, fx, fy){ fx -= 0.5; fy = clamp(fy-0.5,0,H-1.0001); const x0 = Math.floor(fx), y0_ = Math.floor(fy), tx = fx-x0, ty = fy-y0_;
     const xa = ((x0%W)+W)%W, xb = (xa+1)%W, ya = y0_*W, yb = Math.min(H-1,y0_+1)*W;
     return (f[ya+xa]*(1-tx)+f[ya+xb]*tx)*(1-ty) + (f[yb+xa]*(1-tx)+f[yb+xb]*tx)*ty; }
+  const cw = new Float32Array(4), rw = new Float32Array(4);
   function cub(f, fx, fy){ fx -= 0.5; fy -= 0.5; const x0 = Math.floor(fx), y0_ = Math.floor(fy), tx = fx-x0, ty = fy-y0_;
-    const w = t => [((-0.5*t+1)*t-0.5)*t, (1.5*t-2.5)*t*t+1, ((-1.5*t+2)*t+0.5)*t, (0.5*t-0.5)*t*t];
-    const wx = w(tx), wy = w(ty); let s = 0;
-    for(let j=0;j<4;j++){ const yy = clamp(y0_-1+j,0,H-1)*W; let r = 0;
-      for(let k=0;k<4;k++){ r += f[yy+((x0-1+k)%W+W)%W]*wx[k]; } s += r*wy[j]; }
+    cw[0] = ((-0.5*tx+1)*tx-0.5)*tx; cw[1] = (1.5*tx-2.5)*tx*tx+1; cw[2] = ((-1.5*tx+2)*tx+0.5)*tx; cw[3] = (0.5*tx-0.5)*tx*tx;
+    rw[0] = ((-0.5*ty+1)*ty-0.5)*ty; rw[1] = (1.5*ty-2.5)*ty*ty+1; rw[2] = ((-1.5*ty+2)*ty+0.5)*ty; rw[3] = (0.5*ty-0.5)*ty*ty;
+    let s = 0; for(let j=0;j<4;j++){ const yy = clamp(y0_-1+j,0,H-1)*W; let r = 0;
+      for(let k=0;k<4;k++) r += f[yy+((x0-1+k)%W+W)%W]*cw[k]; s += r*rw[j]; }
     return s; }
-  const own = F.own, ref = F.ref || own;
-  // tone mapping toward the real Moon (class means), blended by matchMoon
-  const mm = P.matchMoon;
-  const a = 1 + mm*(((ref.high-ref.mare)/Math.max(own.high-own.mare,1)) - 1);
-  const b = mm*(ref.high - own.high*a) ;
-  const dHM = own.high-own.mare;
-  // crater levels: from about the input pixel scale down to ~1.5 output pixels
-  const inPx = PI2/W, outPx = PI2/OW;
-  const levels = []; { let c = Math.min(0.08, inPx*P.craterMax*2.2);
-    while(0.45*c > 2.5*outPx && levels.length < 10){ levels.push(c); c *= 0.5; } }
+  // ---- geometry tables
+  const cosLo = new Float64Array(BW), sinLo = new Float64Array(BW);
+  for(let j=0;j<BW;j++){ const lo = ((XA+j)%OW+0.5)/OW*PI2; cosLo[j] = Math.cos(lo); sinLo[j] = Math.sin(lo); }
+  const rCl = new Float64Array(nR), rSl = new Float64Array(nR);
+  for(let y=y0;y<y1;y++){ const la = (0.5-(y+0.5)/OH)*PI; rCl[y-y0] = Math.cos(la); rSl[y-y0] = Math.sin(la); }
+  const laTop = (0.5-y0/OH)*PI, laBot = (0.5-y1/OH)*PI, pyHiB = Math.sin(laTop), pyLoB = Math.sin(laBot);
+  let bx0 = -2, bx1 = 2, bz0 = -2, bz1 = 2, bMargin = 0;
+  if(BW < OW){ bx0 = bz0 = 9; bx1 = bz1 = -9; const n = 12, lo0 = XA/OW*PI2, dlo = BW/OW*PI2;
+    for(let a=0;a<=n;a++) for(let b=0;b<=n;b++){ const la = laBot + (laTop-laBot)*a/n, lo = lo0 + dlo*b/n, c = Math.cos(la), X = c*Math.cos(lo), Z = c*Math.sin(lo);
+      if(X < bx0) bx0 = X; if(X > bx1) bx1 = X; if(Z < bz0) bz0 = Z; if(Z > bz1) bz1 = Z; }
+    const st = Math.max(laTop-laBot, dlo)/n; bMargin = st*st/8 + 1e-6; }
+  // ---- sun
   const sun = P.sunAz*PI/180, Lx = Math.cos(sun), Ly = Math.sin(sun);
-  const dens = P.craterDensity;
+  const el = clamp(P.sunEl,5,85)*PI/180, sinE = Math.sin(el), cosE = Math.cos(el), tanE = sinE/cosE;
+  const rel = P.relief;
+  // ---- crater splatting into band buffers
+  const GX = new Float32Array(NP), GY = new Float32Array(NP), ALB = new Float32Array(NP), SHD = new Float32Array(NP).fill(1), HS = new Float32Array(NP);
+  const YNG = new Float32Array(NP), YN2 = new Float32Array(NP);
+  const CL = moonCraterLayers(P, W, OW), inPx = CL.inPx, outPx = CL.outPx;
+  const Rc = 0.006;                                         // simple→complex transition (~18 km on a Moon-sized body)
+  let layerIsBig = false;
+  function splat(cx, cy, cz, L, h){
+    // ---- per-crater properties
+    h = inext(h); const uR = h*U32; const R = L.c*(L.rMin + (L.rMax-L.rMin)*Math.pow(uR, 1.7));
+    if(R < 1.2*outPx) return;
+    const reachMax = R*L.reachK;
+    if(cy < pyLoB - reachMax || cy > pyHiB + reachMax) return;
+    const clat = Math.asin(clamp(cy,-1,1)), clon0 = Math.atan2(cz, cx), clon = clon0 < 0 ? clon0 + PI2 : clon0;
+    // fewer craters on maria (younger surfaces), judged at the crater centre
+    const cm = clamp(0.5+0.5*bil(F.score, clon/PI2*W, (0.5-clat/PI)*H), 0, 1);
+    const Rin = R/inPx;
+    h = inext(h); const uK = h*U32;
+    const mk = L.rays ? 0.6 : clamp(0.42 - 0.13*Rin, 0.03, 0.42);
+    if(uK > 1 - cm*P.mareCraters*(1-mk)) return;
+    h = inext(h); let f = Math.pow(h*U32, 2.6);                 // freshness: 1 = brand new, most craters are old
+    if(L.rays) f = 0.92 + 0.08*f;
+    const fade = clamp((R/outPx-1.2)/2.8, 0, 1);              // sub-pixel craters fade in smoothly
+    const shF = clamp((R/outPx-2.5)/7, 0, 1);                  // no hard pixel-sized shadow specks
+    const complex = R > Rc && R/outPx > 14, terr = complex ? 0.26*clamp((R/outPx-25)/40,0,1) : 0;
+    const cxp = complex ? clamp((R-Rc)/(3*Rc),0,1) : 0;
+    const depth = complex ? 0.22 - 0.06*cxp : 0.38, rim = complex ? 0.055 : 0.075;
+    const rf = 0.34 + 0.22*cxp, pk = 0.24 + 0.08*cxp, peakH = complex ? 0.075*(0.55+0.45*f) : 0;
+    h = inext(h); const nT = 2 + (h%3);
+    h = inext(h); const ph1 = h*U32*PI2; h = inext(h); const ph2 = h*U32*PI2; h = inext(h); const ph3 = h*U32*PI2;
+    h = inext(h); const irr = 0.03 + 0.05*(h*U32);
+    h = inext(h); const floorAlb = (h*U32-0.5)*0.07*(1-f);
+    const sharpP = clamp(0.15 + 1.1*Math.pow(f,0.6), 0, 1);  // degraded craters lose their crisp rims
+    const ampF = (0.35 + 0.65*Math.pow(f,0.5))*fade;
+    const dsoft = depth*0.55;
+    const fresh = clamp((f-0.72)/0.28, 0, 1);
+    const halo = fresh*(0.09 + 0.18*cm)*(L.rays ? 2.6 : 1);
+    const rSeed = (h>>>5) & 1023;
+    const reach = R*(L.rays ? (fresh > 0 ? L.reachK : 2) : (sharpP > 0.08 ? 2 : 1.3)), reach2 = reach*reach;
+    const youngW = (layerIsBig && f > 0.55) ? clamp((f-0.55)/0.35,0,1) : 0;
+    // crater-fixed frame for the irregular outline
+    const ccl = Math.sqrt(Math.max(1e-12, 1-cy*cy));
+    const Ex = -cz/ccl, Ez = cx/ccl, Nx = -cy*cx/ccl, Ny = ccl, Nz = -cy*cz/ccl;
+    // ---- rows covered
+    const ra = 2*Math.asin(Math.min(1, reach/2));
+    let ya = Math.floor((0.5-(clat+ra)/PI)*OH - 1), yb = Math.ceil((0.5-(clat-ra)/PI)*OH + 1);
+    ya = Math.max(ya, y0); yb = Math.min(yb, y1-1);
+    const cosRa = Math.cos(ra), sclat = Math.sin(clat), cclat = Math.cos(clat);
+    const xc = clon/PI2*OW - 0.5;
+    for(let y=ya; y<=yb; y++){ const ry = y-y0, cl = rCl[ry], sl = rSl[ry];
+      const den = cl*cclat; let x0, x1;
+      if(den < 1e-9){ x0 = 0; x1 = OW-1; }
+      else { const arg = (cosRa - sl*sclat)/den; if(arg > 1) continue;
+        if(arg < -1){ x0 = 0; x1 = OW-1; }
+        else { const dl = Math.acos(arg)/PI2*OW + 1.5; if(2*dl >= OW){ x0 = 0; x1 = OW-1; } else { x0 = Math.floor(xc-dl); x1 = Math.ceil(xc+dl); } } }
+      // the crater's columns, as (up to two) runs inside the rendered window
+      let ja = 0, jb = BW-1, jc = 1, jd = 0;
+      if(x1-x0 < OW-1){ const len = x1-x0, off = ((x0-XA)%OW+OW)%OW;
+        if(off < BW){ ja = off; jb = Math.min(BW-1, off+len); } else { ja = 1; jb = 0; }
+        if(off+len >= OW){ jc = 0; jd = Math.min(BW-1, off+len-OW); } }
+      const row = ry*BW;
+      for(let run=0; run<2; run++){ const jA = run ? jc : ja, jB = run ? jd : jb;
+      for(let x=jA; x<=jB; x++){
+        const cL = cosLo[x], sL = sinLo[x];
+        const ppx = cl*cL, ppz = cl*sL, dx = ppx-cx, dy = sl-cy, dz = ppz-cz, d2 = dx*dx+dy*dy+dz*dz;
+        if(d2 >= reach2 || d2 < 1e-20) continue;
+        const d = Math.sqrt(d2), id = 1/d;
+        // radial unit vector in this pixel's (east, north) frame
+        const ux = (-dx*sL + dz*cL)*id, uy = (-dx*sl*cL + dy*cl - dz*sl*sL)*id;
+        const ang = Math.atan2(dx*Nx+dy*Ny+dz*Nz, dx*Ex+dz*Ez);
+        const r = d/R*(1 + irr*(0.55*Math.sin(2*ang+ph1) + 0.3*Math.sin(5*ang+ph2) + 0.15*Math.sin(9*ang+ph3)));
+        const pi = row + x;
+        // ---- profile: slope s = dh/dr and height hh (units of R)
+        let s = 0, hh = 0;
+        if(r < 1){
+          if(complex){
+            if(r < rf){ hh = rim-depth;
+              if(r < pk){ const t = 1-r/pk, lob = Math.max(0.15, 1 + 0.5*Math.sin(3*ang+ph2) + 0.3*Math.sin(5*ang+ph3) + 0.2*Math.sin(8*ang+ph1)), t2 = t*t*(3-2*t); hh += peakH*lob*t2; s = -6*peakH*lob*t*(1-t)/pk; } }
+            else { const t = (r-rf)/(1-rf), w2 = 2*PI*nT, q = t + terr*Math.sin(w2*t)/w2, dq = 1 + terr*Math.cos(w2*t), sq = Math.sqrt(Math.max(q,0));
+              const slump = 1 + 0.28*Math.sin(3*ang+ph1)*Math.sin(PI*t);
+              hh = rim-depth + depth*q*sq; s = depth*1.5*sq*dq/(1-rf)*slump; } }
+          else { hh = rim - depth*(1-r*r); s = 2*depth*r; }
+        } else if(r < 2){ const ir = 1/r, ir3 = ir*ir*ir; hh = rim*(ir3-0.125)*1.142857; s = -3*rim*ir3*ir*1.142857; }
+        if(sharpP < 1){ const rr = r/1.3; let ss = 0, hs = 0;
+          if(rr < 1){ hs = -dsoft*0.5*(1+Math.cos(PI*rr)); ss = dsoft*0.5*PI/1.3*Math.sin(PI*rr); }
+          s = s*sharpP + ss*(1-sharpP); hh = hh*sharpP + hs*(1-sharpP); }
+        const a = ampF*(1 - 0.85*YNG[pi]);
+        GX[pi] += s*ux*a; GY[pi] += s*uy*a; HS[pi] += hh*R*a;
+        // ---- cast shadow inside the bowl: trace toward the sun to the rim
+        if(r < 1 && P.shadows > 0){ const qx = ux*r, qy = uy*r, pd = qx*Lx + qy*Ly, sh = -pd + Math.sqrt(Math.max(0, pd*pd + 1 - r*r));
+          const rimH = (sharpP*rim + (1-sharpP)*0)*a*rel, below = rimH - (hh*a*rel + sh*tanE), pen = tanE*1.6*outPx/R + 0.01;
+          if(below > 0) SHD[pi] *= 1 - P.shadows*0.72*shF*smooth(0, pen, below); }
+        // ---- albedo: old floors vary a little; fresh craters have bright walls, halo and rays
+        let al = floorAlb*(1-smooth(0.8,1.1,r));
+        if(fresh > 0){
+          al += fresh*0.10*Math.exp(-(r-0.88)*(r-0.88)*18);
+          if(r < 2.2) al += halo*(r < 1 ? 0.55 : Math.pow(clamp((2.2-r)/1.2,0,1),1.5));
+          if(L.rays && r > 0.9){
+            // wispy, clumpy streaks of uneven length (noise around the crater, stretched radially)
+            const ca = Math.cos(ang), sa = Math.sin(ang);
+            const n1 = pnoise(ca*3.4+ph1, sa*3.4, r*0.25+ph2, rSeed), n2 = pnoise(ca*8+ph3, sa*8, r*0.6, rSeed+1), n3 = pnoise(ca*18, sa*18+ph1, r*1.3, rSeed+2);
+            const lenA = 3.2 + 3.6*(0.5+0.5*pnoise(ca*1.7, sa*1.7, ph3, rSeed+3));
+            const ray = smooth(0.0, 0.5, n1*0.75 + n2*0.4 + n3*0.2) * smooth(lenA, lenA*0.55, r);
+            al += fresh*(0.34+0.22*cm)*ray*Math.exp(-(r-1)/3.5)*smooth(0.9,1.5,r); } }
+        ALB[pi] += al*fade;
+        if(youngW > 0){ const yv = youngW*(1-smooth(0.9,1.35,r)); if(yv > YN2[pi]) YN2[pi] = yv; }
+      } } }
+  }
+  for(const L of CL.layers){
+    const c = L.c, slots = L.slots, maxReach = 0.5*c;
+    layerIsBig = !L.rays && L.lv < CL.layers.filter(l=>!l.rays).length-2;
+    const pyLo = pyLoB - maxReach, pyHi = pyHiB + maxReach;
+    const s1 = 1 + 0.5*c, s0 = 1 - 0.5*c;
+    const iy0 = Math.floor((pyLo - c)/c), iy1 = Math.floor((pyHi + c)/c);
+    const seedL = S*7919 + L.lv*131;
+    for(let iy=iy0; iy<=iy1; iy++){ const ya = iy*c, yb = ya+c; if(ya > s1 || yb < -s1) continue;
+      const ymin2 = (ya<=0 && yb>=0) ? 0 : Math.min(ya*ya, yb*yb), ymax2 = Math.max(ya*ya, yb*yb);
+      const rhoHi2 = s1*s1 - ymin2; if(rhoHi2 <= 0) continue; const rhoLo2 = s0*s0 - ymax2, rhoHi = Math.sqrt(rhoHi2);
+      const mg = bMargin + maxReach + 0.5*c;
+      const ix0 = Math.max(Math.floor(-rhoHi/c), Math.ceil((bx0-mg)/c)-1), ix1 = Math.min(Math.floor(rhoHi/c), Math.floor((bx1+mg)/c));
+      const kz0 = Math.ceil((bz0-mg)/c)-1, kz1 = Math.floor((bz1+mg)/c);
+      for(let ix=ix0; ix<=ix1; ix++){ const xa = ix*c, xb = xa+c;
+        const xmin2 = (xa<=0 && xb>=0) ? 0 : Math.min(xa*xa, xb*xb), xmax2 = Math.max(xa*xa, xb*xb);
+        const zHi2 = rhoHi2 - xmin2; if(zHi2 <= 0) continue; const zHi = Math.sqrt(zHi2), zl2 = rhoLo2 - xmax2, zLo = zl2 > 0 ? Math.sqrt(zl2) : 0;
+        const ranges = zLo < c ? [Math.floor(-zHi/c), Math.floor(zHi/c)] : [Math.floor(-zHi/c), Math.floor(-zLo/c), Math.floor(zLo/c), Math.floor(zHi/c)];
+        for(let rg=0; rg<ranges.length; rg+=2) for(let iz=Math.max(kz0,ranges[rg]); iz<=Math.min(kz1,ranges[rg+1]); iz++){
+          for(let sl=0; sl<slots; sl++){
+            let h = ihash(ix, iy, iz, seedL + sl*17);
+            if((h>>>8)*(1/16777216) >= L.occ) continue;
+            h = inext(h); const jx = h*U32; h = inext(h); const jy = h*U32; h = inext(h); const jz = h*U32;
+            let cx = (ix+jx)*c, cy = (iy+jy)*c, cz = (iz+jz)*c; const cn = Math.sqrt(cx*cx+cy*cy+cz*cz);
+            if(Math.abs(cn-1) > 0.5*c) continue;
+            splat(cx/cn, cy/cn, cz/cn, L, h);
+          } } } }
+    if(!L.rays) for(let i=0;i<NP;i++) if(YN2[i] > YNG[i]) YNG[i] = YN2[i];
+  }
+  // ---- per-pixel composition
+  const own = F.own, ref = F.ref || own;
+  const mm = P.matchMoon;
+  const ta = 1 + mm*(((ref.high-ref.mare)/Math.max(own.high-own.mare,1)) - 1);
+  const tb = mm*(ref.high - own.high*ta);
+  const dHM = own.high-own.mare;
+  const k = P.mareSharp, eW = 0.6/(1+2*k)*clamp(2.5*W/OW, 0.22, 1);
+  const eOct = clamp(Math.round(Math.log2(5*OW/W)), 3, 7);
+  const fW = W/60, wrW = 0.17, wrA = 0.13*P.ridges, wrE = 0.2*wrW/fW;
+  const fM = OW/(PI2*5), eM = PI2/OW, fG = OW/(PI2*1.6);
+  const Rmax = CL.Rmax;
   for(let y=y0;y<y1;y++){
-    const la = (0.5-(y+0.5)/OH)*PI, cl = Math.cos(la), sl = Math.sin(la), fy = (y+0.5)*H/OH;
-    for(let x=0;x<OW;x++){
-      const lo = (x+0.5)/OW*PI2, cL = Math.cos(lo), sL = Math.sin(lo);
-      const px = cl*cL, py = sl, pz = cl*sL, fx = (x+0.5)*W/OW;
-      const ex = -sL, ez = cL;                      // east  (ey = 0)
-      const nx = -sl*cL, ny = cl, nz = -sl*sL;      // north
-      // --- base tone (bicubic) + sharpened maria
+    const ry = y-y0, cl = rCl[ry], sl = rSl[ry], fy = (y+0.5)*H/OH;
+    for(let j=0;j<BW;j++){ const x = XA+j < OW ? XA+j : XA+j-OW;
+      const cL = cosLo[j], sL = sinLo[j];
+      const px = cl*cL, py = sl, pz = cl*sL, fx = (x+0.5)*W/OW, pi = ry*BW+j;
+      // --- base tone (bicubic, already denoised) + crisp maria with fractal edges
       let Lv = cub(F.L, fx, fy);
       const s0 = bil(F.score, fx, fy);
-      const edgeN = fbm(px,py,pz, W/40, 3, 0.5, S+3);
       const soft = clamp(0.5+0.5*s0, 0, 1);
-      const k = P.mareSharp;
-      const sharp = smooth(-0.6/(1+2*k), 0.6/(1+2*k), s0 + edgeN*0.25*k*clamp(1-Math.abs(s0)*0.6,0,1));
-      Lv += -(sharp - soft)*dHM*0.45*Math.min(1,k*1.5)*clamp(1-Math.abs(s0)*0.8,0,1);
-      Lv = Lv*a + b;
-      const mare = sharp;
-      // --- craters
-      let gx = 0, gy = 0, alb = 0, shadow = 1;
-      for(let lv=0; lv<levels.length; lv++){
-        const c = levels[lv], inv = 1/c;
-        const bx = Math.floor(px*inv-0.5), by = Math.floor(py*inv-0.5), bz = Math.floor(pz*inv-0.5);
-        for(let dz=0;dz<2;dz++) for(let dy=0;dy<2;dy++) for(let dx=0;dx<2;dx++){
-          const ix = bx+dx, iy = by+dy, iz = bz+dz;
-          const h0 = hash3(ix,iy,iz,S+lv*17);
-          if(h0 < 1 - 2*dens*(0.22 + 0.05*lv)) continue;          // occupancy: sparse, slightly more small ones
-          let cx = (ix + 0.5 + 0.5*hash3(ix,iy,iz,S+lv*17+1))*c, cy = (iy + 0.5 + 0.5*hash3(ix,iy,iz,S+lv*17+2))*c, cz = (iz + 0.5 + 0.5*hash3(ix,iy,iz,S+lv*17+3))*c;
-          const cn = Math.sqrt(cx*cx+cy*cy+cz*cz); if(Math.abs(cn-1) > c*0.5) continue;
-          cx /= cn; cy /= cn; cz /= cn;
-          const R = c*(0.16 + 0.29*(0.5+0.5*hash3(ix,iy,iz,S+lv*17+4)));
-          const ddx = px-cx, ddy = py-cy, ddz = pz-cz, d2 = ddx*ddx+ddy*ddy+ddz*ddz;
-          if(d2 > 6.25*R*R) continue;
-          // fewer craters on maria (younger surfaces): judge by the tone at the crater centre
-          const ccl = Math.sqrt(1-cy*cy), clat = Math.asin(cy), clon = Math.atan2(cz,cx);
-          const cfx = ((clon/PI2+1)%1)*W, cfy = (0.5-clat/PI)*H;
-          const cm = clamp(0.5+0.5*bil(F.score,cfx,cfy),0,1);
-          { const u = 0.5+0.5*hash3(ix,iy,iz,S+lv*17+5), big = lv < levels.length-3 ? 0.96 : 0.62; if(u < cm*big*P.mareCraters) continue; }
-          const d = Math.sqrt(d2); if(d < 1e-9) continue;
-          const ux0 = (ddx*ex + ddz*ez)/d, uy0 = (ddx*nx + ddy*ny + ddz*nz)/d, ang = Math.atan2(uy0, ux0);
-          const r = d/R*(1 + 0.025*Math.sin(ang*4 + 3*hash3(ix,iy,iz,S+8)) + 0.012*Math.sin(ang*7 + 3*hash3(ix,iy,iz,S+9)));
-          const age = Math.pow(0.5+0.5*hash3(ix,iy,iz,S+lv*17+6), 3.0);   // 1 = fresh; most craters are old
-          const sizeF = clamp(R/outPx/8, 0.6, 1);
-          const degr = (0.3 + 0.7*Math.pow(age,1.3))*sizeF;
-          const depth = 0.2*degr, rim = 0.045*degr;
-          let dh;                                                    // dh/dr (per unit r)
-          if(r < 1){
-            // steep walls and a flat-ish floor (h = depth*r^4 shape); big craters get a central peak
-            const big = R/outPx > 25 ? 1 : 0;
-            dh = 4*depth*r*r*r;
-            if(big && r < 0.2){ dh += -0.6*depth*(0.2-r)/0.2; }
-            // cast shadow: trace toward the sun from this floor point; if it leaves the bowl below the rim, it is shaded
-            const hb = (depth+rim)*(1-r*r*r*r);
-            const sd = hb/P.sunTan;
-            const qx = ux0*r + Lx*sd, qy = uy0*r + Ly*sd;
-            { const q = Math.sqrt(qx*qx+qy*qy), aa = 1.5*outPx/R; shadow *= 1 - 0.45*degr*P.shadows*smooth(1-aa, 1+aa, q); }
-          } else {
-            dh = -3*rim*Math.pow(r,-4) * clamp((2.5-r)/1.0,0,1);
-          }
-          { const ux = ux0, uy = uy0;
-            const amp = dh*clamp((R/outPx-1.5)/3,0,1);              // dimensionless slope (size-independent); fade sub-pixel craters
-            gx += ux*amp; gy += uy*amp;
-          }
-          // bright rim ring (raised, freshly exposed material)
-          alb += 0.02*Math.max(0,age-0.6)*Math.exp(-((r-1)*(r-1))/0.02);
-          // albedo: bright fresh ejecta halo + rays for the freshest
-          if(age > 0.7){ const f = (age-0.7)/0.3;
-            if(r < 2.2) alb += f*0.10*clamp(1-(r-0.9)/1.3,0,1)*(r>0.6?1:0.6);
-            if(age > 0.93 && r < 6){ const ang = Math.atan2(ddx*nx+ddy*ny+ddz*nz, ddx*ex+ddz*ez);
-              alb += 0.06*Math.pow(Math.max(0,Math.sin(ang*7+hash3(ix,iy,iz,9)*6)),12)*clamp(1-r/6,0,1); } }
-        }
-      }
-      // slope shading: like a mosaic under a fairly high sun — rims catch light, inner walls shade
-      const sl_ = -(gx*Lx + gy*Ly);   // surface facing the sun is lit (bowls, not domes)
-      const shade = 1 + P.relief*0.8*sl_/Math.sqrt(1 + P.relief*P.relief*(gx*gx+gy*gy)*0.3);
+      let mare;
+      if(Math.abs(s0) < 2.2 && k > 0){
+        let en = 0, am = 1, fr = W/40, tot = 0;
+        for(let o=0;o<eOct;o++){ en += am*pnoise(px*fr+o*5.3, py*fr-o*2.1, pz*fr+o*1.7, S+3+o); tot += am; am *= 0.58; fr *= 2.07; }
+        en /= tot;
+        mare = smooth(-eW, eW, s0 + en*0.42*k*clamp(1-Math.abs(s0)*0.5,0,1));
+        Lv += -(mare - soft)*dHM*0.45*Math.min(1,k*1.5)*clamp(1-Math.abs(s0)*0.6,0,1);
+      } else mare = s0 > 0 ? 1 : 0;
+      Lv = Lv*ta + tb;
+      // --- slopes: craters + mare wrinkle ridges
+      let gx = GX[pi], gy = GY[pi];
+      if(mare > 0.25 && wrA > 0){
+        const wq = 0.45/fW, qx = px + wq*pnoise(px*fW*0.35, py*fW*0.35, pz*fW*0.35, S+71), qy = py + wq*pnoise(px*fW*0.35+4.1, py*fW*0.35, pz*fW*0.35, S+72), qz = pz + wq*pnoise(px*fW*0.35, py*fW*0.35-3.3, pz*fW*0.35, S+73);
+        const seg = clamp(0.35 + 0.9*pnoise(qx*fW*0.3, qy*fW*0.3, qz*fW*0.3, S+74), 0, 1);
+        if(seg > 0){
+          const rv = (X, Y, Z) => { const n = pnoise(X*fW, Y*fW, Z*fW, S+75), a = n/wrW; return Math.exp(-a*a) + 0.6*Math.exp(-a*a*9)*(n > 0 ? 1 : 0.4); };
+          const r0 = rv(qx,qy,qz), re = rv(qx-wrE*sL, qy, qz+wrE*cL), rn = rv(qx-wrE*sl*cL, qy+wrE*cl, qz-wrE*sl*sL);
+          const g = wrA*seg*clamp((mare-0.25)/0.5,0,1)*(wrW/fW)/wrE;
+          gx += (re-r0)*g; gy += (rn-r0)*g; } }
+      gx *= rel; gy *= rel;
+      // fine hummocky relief at the output pixel scale (directional derivative toward the sun)
+      const m0 = pnoise(px*fM, py*fM, pz*fM, S+80) + 0.5*pnoise(px*fM*2.1, py*fM*2.1, pz*fM*2.1, S+81);
+      const exs = (-sL*Lx - sl*cL*Ly)*eM, eys = cl*Ly*eM, ezs = (cL*Lx - sl*sL*Ly)*eM;
+      const m1 = pnoise((px+exs)*fM, (py+eys)*fM, (pz+ezs)*fM, S+80) + 0.5*pnoise((px+exs)*fM*2.1, (py+eys)*fM*2.1, (pz+ezs)*fM*2.1, S+81);
+      const micro = (m1-m0)/(eM*fM)*0.03*(1-0.5*mare)*rel*P.grain;
+      if(heightOut){
+        const hv = 150 + 105*HS[pi]/(Rmax*0.42) - 28*mare + 3*m0;
+        const o = pi*4; out[o] = out[o+1] = out[o+2] = hv; out[o+3] = 255; continue; }
+      const nz = 1/Math.sqrt(1 + gx*gx + gy*gy), mu0 = Math.max(0, (sinE - cosE*(gx*Lx + gy*Ly))*nz);
+      const lit = (mu0/(mu0 + nz))*(1 + sinE)/sinE + micro;
+      const shade = clamp(lit, 0.06, 2.4);
       // regolith grain
-      const grain = fbm(px,py,pz, OW/3, 2, 0.6, S+7)*0.035 + (hash3(x,y,S,77))*0.012;
-      // fine real-Moon texture (regolith and small craters) at a scale finer than the source map
+      const grain = (pnoise(px*fG, py*fG, pz*fG, S+7)*0.6 + pnoise(px*fG*2.3, py*fG*2.3, pz*fG*2.3, S+8)*0.4)*0.022 + hash3(x,y,S,77)*0.008;
+      // fine real-Moon texture (regolith and small craters), crisp at any output size
       let rd = 0;
-      if(band){ const tx = (x+0.5)*dW/OW*1.0, ty = (y+0.5)*dH/OH;   // detail texel ~ output pixel scale when OW≈dW*k
-        const k = Math.max(1, OW/dW), sx = (x+0.5)/k, sy = (y+0.5)/k;
+      if(band){ const kk = clamp(OW/dW, 1, 2), sx = (x+0.5)/kk, sy = (y+0.5)/kk;
         const samp2 = (ox, oy) => { const X = sx+ox, Y = sy+oy; const xi = Math.floor(X), yi = Math.floor(Y), fx_ = X-xi, fy_ = Y-yi;
-          const y0b = Math.floor(dH*0.25), hb = Math.floor(dH*0.5);   // undistorted middle band only, mirrored
+          const y0b = Math.floor(dH*0.25), hb = Math.floor(dH*0.5);
           const my = j => { let t = ((j % (2*hb)) + 2*hb) % (2*hb); if(t >= hb) t = 2*hb-1-t; return (y0b + t)*dW; };
           const xa = ((xi%dW)+dW)%dW, xb = (xa+1)%dW, ya = my(yi), yb = my(yi+1);
           return (band[ya+xa]*(1-fx_)+band[ya+xb]*fx_)*(1-fy_) + (band[yb+xa]*(1-fx_)+band[yb+xb]*fx_)*fy_; };
         const w = clamp(0.5 + 1.2*fbm(px,py,pz, 6, 2, 0.5, S+60), 0, 1);
         rd = samp2(dW*0.37, dH*0.21)*w + samp2(dW*0.71, dH*0.63)*(1-w);
-        rd *= 0.55*P.realDetail*(1 - 0.45*mare); }
-      let v = Lv * (1 + rd) * clamp(shade, 0.25, 1.9) * shadow * (1 + alb*P.brightCraters*(1-mare*0.3)) * (1 + grain*P.grain);
+        rd *= 0.5*P.realDetail*(1 - 0.5*mare); }
+      const alb = ALB[pi]*P.brightCraters*(1 - mare*0.15);
+      let v = Lv * (1 + rd + alb) * shade * SHD[pi] * (1 + grain*P.grain);
+      // soft highlight roll-off
+      if(v > 215) v = 215 + 40*(1-Math.exp(-(v-215)/40));
       // colour: artist's own tint + optional real-Moon tint
       const tR = bil(F.tr,fx,fy), tB = bil(F.tb,fx,fy);
       const mt = P.moonTint, refT = mare > 0.5 ? (ref.tintMare||[0,0,0]) : (ref.tintHigh||[0,0,0]);
-      let R = v + tR*(1-mt) + refT[0]*mt, G = v + refT[1]*mt, B = v + tB*(1-mt) + refT[2]*mt;
-      const o = ((y-y0)*OW+x)*4;
-      out[o] = R; out[o+1] = G; out[o+2] = B; out[o+3] = 255;
+      const sc = v/Math.max(Lv,1);
+      const o = pi*4;
+      out[o] = v + (tR*(1-mt) + refT[0]*mt)*sc; out[o+1] = v + refT[1]*mt*sc; out[o+2] = v + (tB*(1-mt) + refT[2]*mt)*sc; out[o+3] = 255;
     }
   }
   return out;
 }
-const MOON_DEFAULTS = { seed:7, soften:0.8, softenLimit:1.3, mareSharp:1.0, mareCraters:1.0, craterDensity:0, realDetail:1, enhance:1, mareMinArea:0.0015, craterMax:6,
-  relief:0.85, brightCraters:1.0, grain:1.0, matchMoon:0.7, moonTint:0.5, sunAz:135, sunTan:0.9, shadows:1 };
+const MOON_DEFAULTS = { seed:7, soften:0.8, mareSharp:1.0, mareCraters:1.0, craterDensity:0.75, realDetail:0.6, enhance:1, mareMinArea:0.0015, craterMax:24,
+  relief:0.7, brightCraters:1.0, grain:1.0, matchMoon:0.7, moonTint:0.5, sunAz:135, sunEl:40, shadows:0.7, ridges:1 };
 
 const DEFAULTS = { radiusKm:7002, waterThr:12, iceLat:22, calm:0.6, mountains:1.0, erosionIters:12, erosionK:0.05,
   warmth:0, wetness:0, keepLayout:0.85, vibrance:1.0, biomeContrast:0, keepDetail:0.7, keepColor:0.85, lakes:0, breakup:1, detail:1, relief:0.4, oceanStyle:0, shelfKm:120,
@@ -871,8 +1022,7 @@ self.onmessage = e => { const d = e.data;
     else if(d.cmd === 'moonAnalyze'){ const F = PTS.moonAnalyze({W:d.W,H:d.H,rgba:d.rgba}, d.P, (p,m) => self.postMessage({type:'progress', p, m}), d.ref, d.detail);
       self.postMessage({type:'done', F}, [F.L.buffer, F.score.buffer, F.tr.buffer, F.tb.buffer, F.detail.L.buffer]); }
     else if(d.cmd === 'setmoon'){ self.moonF = d.F; self.postMessage({type:'done', id:d.id}); }
-    else if(d.cmd === 'moonSynth'){ let out = PTS.moonSynthRows(self.moonF, d.P, d.OW, d.OH, d.y0, d.y1);
-      if(d.height){ for(let i=0;i<out.length;i+=4){ const v = out[i]*0.299+out[i+1]*0.587+out[i+2]*0.114; out[i]=out[i+1]=out[i+2]=v; } }
+    else if(d.cmd === 'moonSynth'){ const out = PTS.moonSynthRows(self.moonF, d.P, d.OW, d.OH, d.y0, d.y1, !!d.height, d.xa|0, d.bw|0);
       self.postMessage({type:'done', id:d.id, out, y0:d.y0, y1:d.y1}, [out.buffer]); }
     else if(d.cmd === 'moonLearn'){ self.postMessage({type:'done', ref: PTS.moonStats(d.rgba, d.W, d.H)}); }
     else if(d.cmd === 'learn'){ self.postMessage({type:'done', lut: PTS.learnEarth(d.rgba, d.W, d.H)}); }
@@ -893,8 +1043,8 @@ function status(t){ $('status').textContent = t; }
 
 /* ------------------------------------------------------------ state */
 const S = { world:'habitable', moonRef:window.MOON_REF, moonF:null, img:null, imgName:'', heightImg:null, lut:window.EARTH_LUT, pk:null, workRes:1024, outRes:4096, oceanStyle:0, keepIce:1, view:'globe', busy:false, dirty:true };
-const MOON_SLIDERS = ['enhance','realDetail','craterDensity','craterMax','mareCraters','brightCraters','mrelief','shadows','sunAz','mareSharp','soften','matchMoon','grain'];
-const mfmt = {enhance:v=>v.toFixed(2)+'×', realDetail:v=>v.toFixed(2)+'×', craterDensity:v=>v===0?'off':Math.round(v*100)+'%', craterMax:v=>v+' px', mareCraters:v=>Math.round(v*100)+'% fewer', brightCraters:v=>v.toFixed(2)+'×', mrelief:v=>v.toFixed(2)+'×',
+const MOON_SLIDERS = ['enhance','realDetail','craterDensity','craterMax','mareCraters','brightCraters','mrelief','shadows','sunAz','sunEl','mareSharp','ridges','soften','matchMoon','grain'];
+const mfmt = {enhance:v=>v.toFixed(2)+'×', realDetail:v=>v.toFixed(2)+'×', craterDensity:v=>v===0?'off':Math.round(v*100)+'%', craterMax:v=>v+' px', sunEl:v=>v+'°', ridges:v=>v===0?'off':v.toFixed(2)+'×', mareCraters:v=>Math.round(v*100)+'% fewer', brightCraters:v=>v.toFixed(2)+'×', mrelief:v=>v.toFixed(2)+'×',
   shadows:v=>Math.round(v*100)+'%', sunAz:v=>['N','NE','E','SE','S','SW','W','NW'][Math.round(((450-v)%360)/45)%8] + ' (' + v + '°)', mareSharp:v=>v.toFixed(2)+'×', soften:v=>Math.round(v*100)+'%', matchMoon:v=>Math.round(v*100)+'%', grain:v=>v.toFixed(2)+'×'};
 const MOON_REANALYZE = new Set(['soften','enhance']);
 for(const k of MOON_SLIDERS){ const el = $(k); const show = () => { $('v-'+k).textContent = mfmt[k](parseFloat(el.value)); el.style.setProperty('--p', ((el.value-el.min)/(el.max-el.min)*100)+'%'); };
@@ -935,9 +1085,9 @@ document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => setView(
 function setWorld(w){ S.world = w; document.body.classList.toggle('moon', w === 'moon');
   document.querySelectorAll('[data-world]').forEach(b => b.classList.toggle('on', b.dataset.world === w));
   $('emptyTitle').textContent = w === 'moon' ? 'Load a moon map' : 'Load a planet map';
-  $('emptyText').textContent = w === 'moon' ? 'Any 2:1 grey moon map. The studio sharpens the maria edges, calms harsh noise and adds a realistic crater field you can zoom into.' : 'Any 2:1 equirectangular map of a world with oceans. The studio keeps your coastlines and ice caps and rebuilds the land like real satellite imagery.';
+  $('emptyText').textContent = w === 'moon' ? 'Any 2:1 grey moon map. The studio cleans out blur and noise, sharpens the maria edges and builds a real-Moon crater field that stays crisp at 16K.' : 'Any 2:1 equirectangular map of a world with oceans. The studio keeps your coastlines and ice caps and rebuilds the land like real satellite imagery.';
   $('sub').textContent = w === 'moon' ? 'Real-Moon style surfaces for fictional moons' : 'Earth-style satellite textures for fictional planets';
-  controls.minDistance = w === 'moon' ? 1.35 : 1.15; atmo.visible = w !== 'moon'; sun.intensity = w === 'moon' ? 3.4 : 2.6; amb.intensity = w === 'moon' ? 0.25 : 0; mat.roughness = 1; S.pk = null; S.moonF = null; closeSheets(); markDirty(); if(S.img) generate(); }
+  controls.minDistance = w === 'moon' ? 1.1 : 1.15; patchOff(); atmo.visible = w !== 'moon'; sun.intensity = w === 'moon' ? 3.4 : 2.6; amb.intensity = w === 'moon' ? 0.25 : 0; mat.roughness = 1; S.pk = null; S.moonF = null; closeSheets(); markDirty(); if(S.img) generate(); }
 document.querySelectorAll('[data-world]').forEach(b => b.onclick = () => { if(S.world !== b.dataset.world) setWorld(b.dataset.world); });
 function setView(v){ S.view = v; document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === v));
   $('mapView').style.display = v === 'globe' ? 'none' : 'flex';
@@ -960,6 +1110,19 @@ scene.add(new THREE.AmbientLight(0xffffff, 0.18));
 const amb = new THREE.AmbientLight(0xffffff, 0); scene.add(amb);
 const sun = new THREE.DirectionalLight(0xffffff, 2.6); sun.position.set(-3, 1.5, 3); scene.add(sun);
 const mat = new THREE.MeshStandardMaterial({color:0x1d2b44, roughness:0.85, metalness:0});
+const PU = { patchMap:{value:null}, patchRect:{value:new THREE.Vector4(0,0,1,1)}, patchOn:{value:0} };
+{ const t = new THREE.DataTexture(new Uint8Array([0,0,0,255]), 1, 1); t.needsUpdate = true; PU.patchMap.value = t; }
+mat.onBeforeCompile = sh => { Object.assign(sh.uniforms, PU);
+  sh.fragmentShader = sh.fragmentShader.replace('#include <map_pars_fragment>', '#include <map_pars_fragment>\nuniform sampler2D patchMap; uniform vec4 patchRect; uniform float patchOn;')
+    .replace('#include <map_fragment>', `#ifdef USE_MAP
+  vec4 sampledDiffuseColor = texture2D( map, vMapUv );
+  if(patchOn > 0.5){
+    vec2 pu = vec2(fract(vMapUv.x - patchRect.x)/patchRect.z, (vMapUv.y - patchRect.y)/patchRect.w);
+    if(pu.x >= 0.0 && pu.x <= 1.0 && pu.y >= 0.0 && pu.y <= 1.0){
+      float e = min(min(pu.x, 1.0-pu.x), min(pu.y, 1.0-pu.y));
+      sampledDiffuseColor = mix(sampledDiffuseColor, texture2D(patchMap, pu), smoothstep(0.0, 0.07, e)); } }
+  diffuseColor *= sampledDiffuseColor;
+#endif`); };
 const globe = new THREE.Mesh(new THREE.SphereGeometry(1, 256, 128), mat); scene.add(globe);
 const atmo = new THREE.Mesh(new THREE.SphereGeometry(1.025, 96, 48), new THREE.ShaderMaterial({
   transparent:true, side:THREE.BackSide, depthWrite:false, blending:THREE.AdditiveBlending,
@@ -972,7 +1135,8 @@ scene.add(atmo);
 function resize(){ const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix(); }
 addEventListener('resize', resize); resize();
 let spin = true; controls.addEventListener('start', () => spin = false);
-renderer.setAnimationLoop(() => { if(spin) globe.rotation.y += 0.0015; controls.update(); renderer.render(scene, camera); });
+controls.addEventListener('change', () => schedulePatch());
+renderer.setAnimationLoop(() => { if(spin) globe.rotation.y += 0.0015; const cd = camera.position.length(); controls.rotateSpeed = Math.min(1, Math.max(0.03, (cd-1)*0.9)); controls.zoomSpeed = Math.min(1, Math.max(0.25, (cd-1)*1.2)); controls.update(); renderer.render(scene, camera); });
 window.__three = {renderer, scene, globe, mat};
 function canvasTex(cv, srgb){ const t = new THREE.CanvasTexture(cv); t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.wrapS = THREE.RepeatWrapping; return t; }
 function setGlobe(colorCv, heightCv, landCv){
@@ -990,7 +1154,7 @@ function pixelsOf(img, w, h){ const c = document.createElement('canvas'); c.widt
 function makeCanvas(w, h){ const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
 
 async function setPlanet(file){
-  try{ const img = await loadImage(file); S.img = img; S.imgName = file.name.replace(/\.[^.]+$/, ''); S.pk = null;
+  try{ const img = await loadImage(file); S.img = img; S.imgName = file.name.replace(/\.[^.]+$/, ''); S.pk = null; S.moonF = null; patchOff();
     $('empty').style.display = 'none'; $('gen').disabled = false;
     const r = img.naturalWidth/img.naturalHeight; status(img.naturalWidth + '×' + img.naturalHeight + (Math.abs(r-2) > 0.05 ? ' · not 2:1, it will be stretched' : ''));
     const pv = makeCanvas(2048, 1024); pv.getContext('2d').drawImage(img, 0, 0, 2048, 1024);
@@ -1036,8 +1200,8 @@ async function moonAnalyze(){
   S.moonF = r.F; poolMoon = null;
 }
 let poolMoon = null;
-async function moonRender(OW, OH, height, onBand){
-  const P = moonParams(); const bands = []; const step = Math.max(8, Math.ceil(OH/(NW*8)));
+async function moonRender(OW, OH, height, onBand, Pin){
+  const P = Pin || moonParams(); const bands = []; const step = Math.max(8, Math.ceil(OH/(NW*8)));
   for(let y=0;y<OH;y+=step) bands.push([y, Math.min(OH, y+step)]);
   while(pool.length < NW){ const w = new Worker(workerURL); w.onerror = e => console.error('worker', e.message); pool.push(w); }
   if(poolMoon !== S.moonF){ await Promise.all(pool.map(w => poolCall(w, {cmd:'setmoon', F:S.moonF}))); poolMoon = S.moonF; }
@@ -1053,6 +1217,45 @@ function poolCall(w, msg, transfer){ return new Promise((res, rej) => { const id
   const on = e => { const d = e.data; if(d.id !== id && d.type !== 'error') return; w.removeEventListener('message', on);
     if(d.type === 'error') rej(new Error(d.message)); else res(d); };
   w.addEventListener('message', on); w.postMessage(msg, transfer || []); }); }
+/* ------------------------------------------------------------ moon deep-zoom detail patches
+   When you stop moving close to the surface, the visible area is rendered again at up to ~100K-equivalent
+   resolution and blended onto the globe, so zooming in shows real craters instead of blocky texels. */
+const patch = { timer:0, busy:false, again:false, tex:null };
+function patchOff(){ clearTimeout(patch.timer); PU.patchOn.value = 0; }
+function schedulePatch(){ clearTimeout(patch.timer);
+  if(S.world !== 'moon' || !S.moonF || !S.moonP || spin) return;
+  if(camera.position.length() > 2.0){ PU.patchOn.value = 0; return; }
+  patch.timer = setTimeout(updatePatch, 400); }
+async function updatePatch(){
+  if(S.busy){ schedulePatch(); return; }
+  if(patch.busy){ patch.again = true; return; }
+  const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2(0, 0), camera);
+  const hit = ray.intersectObject(globe)[0]; if(!hit || !hit.uv) return;
+  const d = camera.position.length(), tv = Math.tan(camera.fov*Math.PI/360);
+  const half = (d-1)*tv*Math.max(camera.aspect, 1)*1.25 + 0.002;         // surface half-size of the view (radians)
+  const PS = Math.min(innerWidth, innerHeight) < 700 ? 1024 : 1536;
+  const OW = Math.min(262144, Math.round(PS*Math.PI/half/2)*2), OH = OW/2;
+  if(OW < 6500){ PU.patchOn.value = 0; return; }                         // the 4K preview is sharp enough here
+  const lat = (hit.uv.y-0.5)*Math.PI, cl = Math.max(Math.cos(lat), 0.05);
+  const BW = Math.min(OW, Math.round(PS/cl), Math.round(PS*2.5)), BH = Math.min(OH, PS);
+  const xa = ((Math.floor(hit.uv.x*OW - BW/2) % OW) + OW) % OW, y0 = Math.max(0, Math.min(OH-BH, Math.round((1-hit.uv.y)*OH - BH/2)));
+  const F = S.moonF, P = S.moonP; patch.busy = true; status('Rendering zoom detail…');
+  try{
+    while(pool.length < NW){ const w = new Worker(workerURL); w.onerror = e => console.error('worker', e.message); pool.push(w); }
+    if(poolMoon !== F){ await Promise.all(pool.map(w => poolCall(w, {cmd:'setmoon', F}))); poolMoon = F; }
+    const cv = makeCanvas(BW, BH), cx = cv.getContext('2d'); const step = 32; let next = 0;
+    const job = async (w) => { while(next < BH){ const a = next; next += step; const b = Math.min(BH, a+step);
+        const r = await poolCall(w, {cmd:'moonSynth', P, OW, OH, y0:y0+a, y1:y0+b, xa, bw:BW});
+        cx.putImageData(new ImageData(r.out, BW, b-a), 0, a); } };
+    await Promise.all(pool.map(job));
+    if(F === S.moonF && P === S.moonP && S.world === 'moon'){
+      const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter;
+      if(patch.tex) patch.tex.dispose(); patch.tex = t; PU.patchMap.value = t;
+      PU.patchRect.value.set(xa/OW, 1-(y0+BH)/OH, BW/OW, BH/OH); PU.patchOn.value = 1;
+      status('Zoom detail · ' + (OW >= 10240 ? Math.round(OW/1024) + 'K' : (OW/1024).toFixed(1) + 'K') + '-equivalent'); window.__lastPatch = {ok:true, OW, BW, BH}; }
+  }catch(e){ console.error(e); window.__lastPatch = {ok:false, error:e.message}; }
+  patch.busy = false; if(patch.again){ patch.again = false; schedulePatch(); }
+}
 async function ensurePool(){
   while(pool.length < NW){ const w = new Worker(workerURL); w.onerror = e => console.error('worker', e.message); pool.push(w); }
   if(poolPk !== S.pk){ await Promise.all(pool.map(w => { const pk = {W:S.pk.W, H:S.pk.H, buf:S.pk.buf.slice()}; return poolCall(w, {cmd:'setpk', pk}, [pk.buf.buffer]); })); poolPk = S.pk; }
@@ -1081,9 +1284,9 @@ async function generate(){
   try{
     if(S.world === 'moon'){
       if(!S.moonF) await moonAnalyze();
-      const OW = 4096, OH = 2048; const cv = makeCanvas(OW, OH), cx = cv.getContext('2d');
-      await moonRender(OW, OH, false, (out, y0, y1) => cx.putImageData(new ImageData(out, OW, y1-y0), 0, y0));
-      setGlobe(cv, null, null); controls.minDistance = 1.35;
+      const P = moonParams(), OW = 4096, OH = 2048; const cv = makeCanvas(OW, OH), cx = cv.getContext('2d');
+      await moonRender(OW, OH, false, (out, y0, y1) => cx.putImageData(new ImageData(out, OW, y1-y0), 0, y0), P);
+      setGlobe(cv, null, null); controls.minDistance = 1.1; S.moonP = P; patchOff(); schedulePatch();
       $('mapAfter').getContext('2d').drawImage(cv, 0, 0, 2048, 1024);
       S.dirty = false; $('gen').textContent = 'Regenerate';
       status('Done in ' + ((performance.now()-t0)/1000).toFixed(1) + ' s · preview 4096×2048 · zoom in to see craters · export up to 16K');
