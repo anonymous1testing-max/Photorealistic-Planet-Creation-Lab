@@ -795,7 +795,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
     const cm = clamp(0.5+0.5*bil(F.score, clon/PI2*W, (0.5-clat/PI)*H), 0, 1);
     const Rin = R/inPx;
     h = inext(h); const uK = h*U32;
-    const mk = L.rays ? 0.6 : clamp(0.42 - 0.13*Rin, 0.03, 0.42);
+    const mk = L.rays ? 0.6 : clamp(1.0 - 0.32*Rin, 0.03, 0.85);
     if(uK > 1 - cm*P.mareCraters*(1-mk)) return;
     h = inext(h); let f = Math.pow(h*U32, 2.6);                 // freshness: 1 = brand new, most craters are old
     if(L.rays) f = 0.92 + 0.08*f;
@@ -808,7 +808,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
     h = inext(h); const nT = 2 + (h%3);
     h = inext(h); const ph1 = h*U32*PI2; h = inext(h); const ph2 = h*U32*PI2; h = inext(h); const ph3 = h*U32*PI2;
     h = inext(h); const irr = 0.03 + 0.05*(h*U32);
-    h = inext(h); const floorAlb = (h*U32-0.5)*0.07*(1-f);
+    h = inext(h); const floorAlb = (h*U32-0.5)*0.035*(1-f);
     const sharpP = clamp(0.15 + 1.1*Math.pow(f,0.6), 0, 1);  // degraded craters lose their crisp rims
     const ampF = (0.35 + 0.65*Math.pow(f,0.5))*fade;
     const dsoft = depth*0.55;
@@ -817,6 +817,22 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
     const rSeed = (h>>>5) & 1023;
     const reach = R*(L.rays ? (fresh > 0 ? L.reachK : 2) : (sharpP > 0.08 ? 2 : 1.3)), reach2 = reach*reach;
     const youngW = (layerIsBig && f > 0.55) ? clamp((f-0.55)/0.35,0,1) : 0;
+    const detailed = R/outPx > 9, big = R/outPx > 24, iR = 1/R, aaW = Math.min(0.25, 0.8*outPx/R);
+    let PS = 0, PH = 0;
+    const prof = (r, ang) => { let s = 0, hh = 0;
+      if(r < 1){
+        if(complex){
+          if(r < rf){ hh = rim-depth;
+            if(r < pk){ const t = 1-r/pk, lob = Math.max(0.15, 1 + 0.5*Math.sin(3*ang+ph2) + 0.3*Math.sin(5*ang+ph3) + 0.2*Math.sin(8*ang+ph1)), t2 = t*t*(3-2*t); hh += peakH*lob*t2; s = -6*peakH*lob*t*(1-t)/pk; } }
+          else { const t = (r-rf)/(1-rf), w2 = 2*PI*nT, q = t + terr*Math.sin(w2*t)/w2, dq = 1 + terr*Math.cos(w2*t), sq = Math.sqrt(Math.max(q,0));
+            const slump = 1 + 0.28*Math.sin(3*ang+ph1)*Math.sin(PI*t);
+            hh = rim-depth + depth*q*sq; s = depth*1.5*sq*dq/(1-rf)*slump; } }
+        else { hh = rim - depth*(1-r*r); s = 2*depth*r; }
+      } else if(r < 2){ const ir = 1/r, ir3 = ir*ir*ir; hh = rim*(ir3-0.125)*1.142857; s = -3*rim*ir3*ir*1.142857; }
+      if(sharpP < 1){ const rr = r/1.3; let ss = 0, hs = 0;
+        if(rr < 1){ hs = -dsoft*0.5*(1+Math.cos(PI*rr)); ss = dsoft*0.5*PI/1.3*Math.sin(PI*rr); }
+        s = s*sharpP + ss*(1-sharpP); hh = hh*sharpP + hs*(1-sharpP); }
+      PS = s; PH = hh; };
     // crater-fixed frame for the irregular outline
     const ccl = Math.sqrt(Math.max(1e-12, 1-cy*cy));
     const Ex = -cz/ccl, Ez = cx/ccl, Nx = -cy*cx/ccl, Ny = ccl, Nz = -cy*cz/ccl;
@@ -846,43 +862,47 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
         const d = Math.sqrt(d2), id = 1/d;
         // radial unit vector in this pixel's (east, north) frame
         const ux = (-dx*sL + dz*cL)*id, uy = (-dx*sl*cL + dy*cl - dz*sl*sL)*id;
-        const ang = Math.atan2(dx*Nx+dy*Ny+dz*Nz, dx*Ex+dz*Ez);
-        const r = d/R*(1 + irr*(0.55*Math.sin(2*ang+ph1) + 0.3*Math.sin(5*ang+ph2) + 0.15*Math.sin(9*ang+ph3)));
+        const ex_ = dx*Ex+dz*Ez, ny_ = dx*Nx+dy*Ny+dz*Nz, il = 1/Math.sqrt(ex_*ex_+ny_*ny_+1e-30), ca = ex_*il, sa = ny_*il;
+        const ang = Math.atan2(ny_, ex_);
+        let r = d/R*(1 + irr*(0.55*Math.sin(2*ang+ph1) + 0.3*Math.sin(5*ang+ph2) + 0.15*Math.sin(9*ang+ph3)));
+        if(detailed && r > 0.6 && r < 1.5) r *= 1 + 0.03*pnoise(ca*4.2+ph1, sa*4.2, ph2, rSeed+7) + (big ? 0.014*pnoise(ca*11+ph3, sa*11, ph1, rSeed+8) : 0);   // ragged outline
         const pi = row + x;
         // ---- profile: slope s = dh/dr and height hh (units of R)
-        let s = 0, hh = 0;
-        if(r < 1){
-          if(complex){
-            if(r < rf){ hh = rim-depth;
-              if(r < pk){ const t = 1-r/pk, lob = Math.max(0.15, 1 + 0.5*Math.sin(3*ang+ph2) + 0.3*Math.sin(5*ang+ph3) + 0.2*Math.sin(8*ang+ph1)), t2 = t*t*(3-2*t); hh += peakH*lob*t2; s = -6*peakH*lob*t*(1-t)/pk; } }
-            else { const t = (r-rf)/(1-rf), w2 = 2*PI*nT, q = t + terr*Math.sin(w2*t)/w2, dq = 1 + terr*Math.cos(w2*t), sq = Math.sqrt(Math.max(q,0));
-              const slump = 1 + 0.28*Math.sin(3*ang+ph1)*Math.sin(PI*t);
-              hh = rim-depth + depth*q*sq; s = depth*1.5*sq*dq/(1-rf)*slump; } }
-          else { hh = rim - depth*(1-r*r); s = 2*depth*r; }
-        } else if(r < 2){ const ir = 1/r, ir3 = ir*ir*ir; hh = rim*(ir3-0.125)*1.142857; s = -3*rim*ir3*ir*1.142857; }
-        if(sharpP < 1){ const rr = r/1.3; let ss = 0, hs = 0;
-          if(rr < 1){ hs = -dsoft*0.5*(1+Math.cos(PI*rr)); ss = dsoft*0.5*PI/1.3*Math.sin(PI*rr); }
-          s = s*sharpP + ss*(1-sharpP); hh = hh*sharpP + hs*(1-sharpP); }
-        const a = ampF*(1 - 0.85*YNG[pi]);
-        GX[pi] += s*ux*a; GY[pi] += s*uy*a; HS[pi] += hh*R*a;
+        prof(r, ang); let s = PS, hh = PH;
+        // analytic anti-aliasing of the sharp rim crest: no stair-stepped rims when zoomed in
+        if(r > 1-aaW && r < 1+aaW){ prof(1-aaW, ang); const s0 = PS, h0 = PH; prof(1+aaW, ang); const t = (r-1+aaW)/(2*aaW); s = s0 + (PS-s0)*t; hh = h0 + (PH-h0)*t; }
+        // ---- rough, slumped walls and lumpy ejecta (real craters are never smooth bowls)
+        let tg = 0, al = 0;
+        if(detailed && r < 1.75){
+          const q1 = dx*iR, q2 = dy*iR, q3 = dz*iR;
+          const n1 = pnoise(q1*2.6+ph1, q2*2.6, q3*2.6, rSeed+11), n2 = big ? pnoise(q1*6.5, q2*6.5+ph2, q3*6.5, rSeed+12) : 0, n3 = pnoise(q2*3.4, q3*3.4+ph3, q1*3.4, rSeed+11);
+          const wallW = r < 1 ? 0.35 + 0.65*smooth(0.2, 0.8, r) : clamp((1.75-r)/0.75, 0, 1);
+          const rough = (0.12 + 0.26*sharpP)*wallW;
+          s *= 1 + rough*1.7*(big ? 0.65*n1 + 0.35*n2 : 0.85*n1);
+          tg = rough*(0.55*Math.abs(s) + 0.07)*(0.7*n3 + 0.3*n2);
+          if(r > 1 && sharpP > 0.25){ const nl = pnoise(ca*26+ph2, sa*26, r*1.6, rSeed+14), fall = clamp((1.75-r)/0.75,0,1);   // radial ejecta lineations
+            s += 0.07*sharpP*nl*fall; al += fresh*0.035*nl*fall; }
+          if(fresh > 0 && big && r < 1.05) al += fresh*0.08*smooth(0.35,0.95,r)*pnoise(ca*22+ph3, sa*22, r*2.5+ph1, rSeed+15);   // bright downslope streaks
+        }
+        const a = ampF*(1 - 0.6*YNG[pi]);
+        GX[pi] += (s*ux - tg*uy)*a; GY[pi] += (s*uy + tg*ux)*a; HS[pi] += hh*R*a;
         // ---- cast shadow inside the bowl: trace toward the sun to the rim
         if(r < 1 && P.shadows > 0){ const qx = ux*r, qy = uy*r, pd = qx*Lx + qy*Ly, sh = -pd + Math.sqrt(Math.max(0, pd*pd + 1 - r*r));
-          const rimH = (sharpP*rim + (1-sharpP)*0)*a*rel, below = rimH - (hh*a*rel + sh*tanE), pen = tanE*1.6*outPx/R + 0.01;
+          const rimH = sharpP*rim*a*rel, below = rimH - (hh*a*rel + sh*tanE), pen = tanE*1.6*outPx/R + 0.01;
           if(below > 0) SHD[pi] *= 1 - P.shadows*0.72*shF*smooth(0, pen, below); }
         // ---- albedo: old floors vary a little; fresh craters have bright walls, halo and rays
-        let al = floorAlb*(1-smooth(0.8,1.1,r));
+        al += floorAlb*(1-smooth(0.6,1.2,r));
         if(fresh > 0){
           al += fresh*0.10*Math.exp(-(r-0.88)*(r-0.88)*18);
           if(r < 2.2) al += halo*(r < 1 ? 0.55 : Math.pow(clamp((2.2-r)/1.2,0,1),1.5));
           if(L.rays && r > 0.9){
             // wispy, clumpy streaks of uneven length (noise around the crater, stretched radially)
-            const ca = Math.cos(ang), sa = Math.sin(ang);
             const n1 = pnoise(ca*3.4+ph1, sa*3.4, r*0.25+ph2, rSeed), n2 = pnoise(ca*8+ph3, sa*8, r*0.6, rSeed+1), n3 = pnoise(ca*18, sa*18+ph1, r*1.3, rSeed+2);
             const lenA = 3.2 + 3.6*(0.5+0.5*pnoise(ca*1.7, sa*1.7, ph3, rSeed+3));
             const ray = smooth(0.0, 0.5, n1*0.75 + n2*0.4 + n3*0.2) * smooth(lenA, lenA*0.55, r);
             al += fresh*(0.34+0.22*cm)*ray*Math.exp(-(r-1)/3.5)*smooth(0.9,1.5,r); } }
         ALB[pi] += al*fade;
-        if(youngW > 0){ const yv = youngW*(1-smooth(0.9,1.35,r)); if(yv > YN2[pi]) YN2[pi] = yv; }
+        if(youngW > 0){ const yv = youngW*(1-smooth(0.6,1.5,r)); if(yv > YN2[pi]) YN2[pi] = yv; }
       } } }
   }
   for(const L of CL.layers){
@@ -921,6 +941,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
   const dHM = own.high-own.mare;
   const k = P.mareSharp, eW = 0.6/(1+2*k)*clamp(2.5*W/OW, 0.22, 1);
   const eOct = clamp(Math.round(Math.log2(5*OW/W)), 3, 7);
+  const wF0 = W/(PI2*2.2), wOct = clamp(Math.ceil(Math.log2(1.1*OW/W)), 1, 5);
   const fW = W/60, wrW = 0.17, wrA = 0.13*P.ridges, wrE = 0.2*wrW/fW;
   const fM = OW/(PI2*5), eM = PI2/OW, fG = OW/(PI2*1.6);
   const Rmax = CL.Rmax;
@@ -930,8 +951,12 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
       const cL = cosLo[j], sL = sinLo[j];
       const px = cl*cL, py = sl, pz = cl*sL, fx = (x+0.5)*W/OW, pi = ry*BW+j;
       // --- base tone (bicubic, already denoised) + crisp maria with fractal edges
-      let Lv = cub(F.L, fx, fy);
-      const s0 = bil(F.score, fx, fy);
+      let wfx = fx, wfy = fy;
+      if(wOct > 0){ let ax = 0, ay = 0, am = 1, fr = wF0;
+        for(let o=0;o<wOct;o++){ ax += am*pnoise(px*fr+o*1.7, py*fr, pz*fr, S+90+o); ay += am*pnoise(px*fr-3.1, py*fr+o*2.3, pz*fr+5.7, S+97+o); am *= 0.52; fr *= 2.13; }
+        wfx += ax*0.75; wfy += ay*0.75; }
+      let Lv = cub(F.L, wfx, wfy);
+      const s0 = bil(F.score, wfx, wfy);
       const soft = clamp(0.5+0.5*s0, 0, 1);
       let mare;
       if(Math.abs(s0) < 2.2 && k > 0){
@@ -993,6 +1018,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
 }
 const MOON_DEFAULTS = { seed:7, soften:0.8, mareSharp:1.0, mareCraters:1.0, craterDensity:0.75, realDetail:0.6, enhance:1, mareMinArea:0.0015, craterMax:24,
   relief:0.7, brightCraters:1.0, grain:1.0, matchMoon:0.7, moonTint:0.5, sunAz:135, sunEl:40, shadows:0.7, ridges:1 };
+
 
 const DEFAULTS = { radiusKm:7002, waterThr:12, iceLat:22, calm:0.6, mountains:1.0, erosionIters:12, erosionK:0.05,
   warmth:0, wetness:0, keepLayout:0.85, vibrance:1.0, biomeContrast:0, keepDetail:0.7, keepColor:0.85, lakes:0, breakup:1, detail:1, relief:0.4, oceanStyle:0, shelfKm:120,
@@ -1239,29 +1265,40 @@ async function updatePatch(){
   if(patch.busy){ patch.again = true; return; }
   const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2(0, 0), camera);
   const hit = ray.intersectObject(globe)[0]; if(!hit || !hit.uv) return;
+  // the view's footprint on the surface (radians) and the screen's real pixel count
   const d = camera.position.length(), tv = Math.tan(camera.fov*Math.PI/360);
-  const half = (d-1)*tv*Math.max(camera.aspect, 1)*1.25 + 0.002;         // surface half-size of the view (radians)
-  const PS = Math.min(innerWidth, innerHeight) < 700 ? 1024 : 1536;
-  const OW = Math.min(262144, Math.round(PS*Math.PI/half/2)*2), OH = OW/2;
-  if(OW < (S.previewW || 4096)*1.5){ PU.patchOn.value = 0; return; }     // the preview is sharp enough here
+  const hv = (d-1)*tv*1.12 + 0.001, hh = hv*camera.aspect;
+  const dpr = renderer.getPixelRatio(), sw = innerWidth*dpr, sh = innerHeight*dpr;
   const lat = (hit.uv.y-0.5)*Math.PI, cl = Math.max(Math.cos(lat), 0.05);
-  const BW = Math.min(OW, Math.round(PS/cl), Math.round(PS*2.5)), BH = Math.min(OH, PS);
-  const xa = ((Math.floor(hit.uv.x*OW - BW/2) % OW) + OW) % OW, y0 = Math.max(0, Math.min(OH-BH, Math.round((1-hit.uv.y)*OH - BH/2)));
-  const F = S.moonF, P = S.moonP; patch.busy = true; status('Rendering zoom detail…');
+  // one patch texel ≈ one screen pixel, within a pixel budget
+  let tex = Math.min(2*hh/sw, 2*hv/sh);
+  const budget = LOWMEM ? 2.4e6 : 4.2e6;
+  const area = (2*hh/(tex*cl))*(2*hv/tex); if(area > budget) tex *= Math.sqrt(area/budget);
+  const OWf = Math.min(262144, Math.round(2*Math.PI/tex/2)*2);
+  if(OWf < (S.previewW || 4096)*1.5){ PU.patchOn.value = 0; return; }   // the preview is sharp enough here
+  const F = S.moonF, P = S.moonP; patch.busy = true;
   try{
     while(pool.length < NW){ const w = new Worker(workerURL); w.onerror = e => console.error('worker', e.message); pool.push(w); }
     if(poolMoon !== F){ await Promise.all(pool.map(w => poolCall(w, {cmd:'setmoon', F}))); poolMoon = F; }
-    const cv = makeCanvas(BW, BH), cx = cv.getContext('2d'); const step = 32; let next = 0;
-    const job = async (w) => { while(next < BH){ const a = next; next += step; const b = Math.min(BH, a+step);
-        const r = await poolCall(w, {cmd:'moonSynth', P, OW, OH, y0:y0+a, y1:y0+b, xa, bw:BW});
-        cx.putImageData(new ImageData(r.out, BW, b-a), 0, a); } };
-    await Promise.all(pool.map(job));
-    if(F === S.moonF && P === S.moonP && S.world === 'moon'){
+    // progressive: a quick half-resolution pass, then full detail (skipped if you move again)
+    for(const k of (OWf >= (S.previewW || 4096)*3 ? [2, 1] : [1])){
+      if(patch.again) break;
+      const OW = Math.round(OWf/k/2)*2, OH = OW/2, te = 2*Math.PI/OW;
+      const BW = Math.min(OW, Math.ceil(2*hh/(te*cl)) + 8), BH = Math.min(OH, Math.ceil(2*hv/te) + 8);
+      const xa = ((Math.floor(hit.uv.x*OW - BW/2) % OW) + OW) % OW, y0 = Math.max(0, Math.min(OH-BH, Math.round((1-hit.uv.y)*OH - BH/2)));
+      status(k > 1 ? 'Rendering zoom detail…' : 'Sharpening zoom detail…');
+      const cv = makeCanvas(BW, BH), cx = cv.getContext('2d'); const step = 24; let next = 0;
+      const job = async (w) => { while(next < BH && !patch.again){ const a = next; next += step; const b = Math.min(BH, a+step);
+          const r = await poolCall(w, {cmd:'moonSynth', P, OW, OH, y0:y0+a, y1:y0+b, xa, bw:BW});
+          cx.putImageData(new ImageData(r.out, BW, b-a), 0, a); } };
+      await Promise.all(pool.map(job));
+      if(patch.again || F !== S.moonF || P !== S.moonP || S.world !== 'moon') break;
       const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter;
       if(patch.tex) patch.tex.dispose(); patch.tex = t; PU.patchMap.value = t;
       PU.patchRect.value.set(xa/OW, 1-(y0+BH)/OH, BW/OW, BH/OH); PU.patchOn.value = 1;
-      status('Zoom detail · ' + (OW >= 10240 ? Math.round(OW/1024) + 'K' : (OW/1024).toFixed(1) + 'K') + '-equivalent'); window.__lastPatch = {ok:true, OW, BW, BH}; }
-  }catch(e){ console.error(e); window.__lastPatch = {ok:false, error:e.message}; }
+      status('Zoom detail · ' + (OW >= 10240 ? Math.round(OW/1024) + 'K' : (OW/1024).toFixed(1) + 'K') + '-equivalent'); window.__lastPatch = {ok:true, OW, BW, BH, pass:k};
+    }
+  }catch(e){ console.error(e); resetPool(); window.__lastPatch = {ok:false, error:e.message}; }
   patch.busy = false; if(patch.again){ patch.again = false; schedulePatch(); }
 }
 async function ensurePool(){
