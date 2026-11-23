@@ -1030,10 +1030,11 @@ self.onmessage = e => { const d = e.data;
 };`;
 const workerURL = URL.createObjectURL(new Blob([CORE, W_GLUE], {type:'text/javascript'}));
 function runWorker(msg, transfer, onProgress){
-  return new Promise((res, rej) => { const w = new Worker(workerURL);
-    w.onmessage = e => { const d = e.data; if(d.type === 'progress'){ onProgress && onProgress(d.p, d.m); return; }
-      w.terminate(); if(d.type === 'error') rej(new Error(d.message)); else res(d); };
-    w.onerror = e => { w.terminate(); rej(new Error(e.message || 'Worker failed')); };
+  return new Promise((res, rej) => { const w = new Worker(workerURL); let dog = 0;
+    const arm = () => { clearTimeout(dog); dog = setTimeout(() => { w.terminate(); rej(new Error('The worker stopped responding (probably out of memory)')); }, 240000); }; arm();
+    w.onmessage = e => { const d = e.data; if(d.type === 'progress'){ arm(); onProgress && onProgress(d.p, d.m); return; }
+      clearTimeout(dog); w.terminate(); if(d.type === 'error') rej(new Error(d.message)); else res(d); };
+    w.onerror = e => { clearTimeout(dog); w.terminate(); rej(new Error(e.message || 'Worker failed (probably out of memory)')); };
     w.postMessage(msg, transfer || []); });
 }
 function fail(msg){ const e = $('err'); e.style.display = 'flex'; e.textContent = msg; }
@@ -1086,7 +1087,7 @@ function setWorld(w){ S.world = w; document.body.classList.toggle('moon', w === 
   document.querySelectorAll('[data-world]').forEach(b => b.classList.toggle('on', b.dataset.world === w));
   $('emptyTitle').textContent = w === 'moon' ? 'Load a moon map' : 'Load a planet map';
   $('emptyText').textContent = w === 'moon' ? 'Any 2:1 grey moon map. The studio cleans out blur and noise, sharpens the maria edges and builds a real-Moon crater field that stays crisp at 16K.' : 'Any 2:1 equirectangular map of a world with oceans. The studio keeps your coastlines and ice caps and rebuilds the land like real satellite imagery.';
-  $('sub').textContent = w === 'moon' ? 'Real-Moon style surfaces for fictional moons' : 'Earth-style satellite textures for fictional planets';
+  $('sub').textContent = w === 'moon' ? 'Real-Moon style surfaces for fictional moons · engine v2' : 'Earth-style satellite textures for fictional planets';
   controls.minDistance = w === 'moon' ? 1.1 : 1.15; patchOff(); atmo.visible = w !== 'moon'; sun.intensity = w === 'moon' ? 3.4 : 2.6; amb.intensity = w === 'moon' ? 0.25 : 0; mat.roughness = 1; S.pk = null; S.moonF = null; closeSheets(); markDirty(); if(S.img) generate(); }
 document.querySelectorAll('[data-world]').forEach(b => b.onclick = () => { if(S.world !== b.dataset.world) setWorld(b.dataset.world); });
 function setView(v){ S.view = v; document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === v));
@@ -1192,8 +1193,11 @@ async function getMoonDetail(){ if(moonDetail) return moonDetail;
   const im = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = window.MOON_DETAIL; });
   const W = im.naturalWidth, H = im.naturalHeight, px = pixelsOf(im, W, H), L = new Float32Array(W*H);
   for(let i=0;i<W*H;i++) L[i] = px[4*i]; moonDetail = {W, H, L}; return moonDetail; }
+// phones and low-memory devices: smaller analysis grid and fewer workers (each worker holds a copy of it)
+const LOWMEM = (navigator.deviceMemory && navigator.deviceMemory <= 4) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+let moonCap = LOWMEM ? 2048 : 4096;
 async function moonAnalyze(){
-  const P = moonParams(); const iw = S.img.naturalWidth; const W = Math.min(4096, Math.max(1024, Math.round(iw/2)*2)), H = W/2;
+  const P = moonParams(); const iw = S.img.naturalWidth; const W = Math.min(moonCap, Math.max(1024, Math.round(iw/2)*2)), H = W/2;
   const rgba = pixelsOf(S.img, W, H);
   const detail = await getMoonDetail();
   const r = await runWorker({cmd:'moonAnalyze', W, H, rgba, P, ref:S.moonRef, detail:{W:detail.W, H:detail.H, L:detail.L.slice()}}, [rgba.buffer], (p, m) => prog('Reading the moon', p*0.5, m));
@@ -1211,12 +1215,16 @@ async function moonRender(OW, OH, height, onBand, Pin){
       onBand(r.out, y0, y1); done++; prog(height ? 'Rendering height map' : 'Carving craters', done/bands.length, (y1*100/OH|0) + '%'); } };
   await Promise.all(pool.map(job));
 }
-const NW = Math.max(2, Math.min(8, (navigator.hardwareConcurrency || 4) - 1));
+const NW = Math.max(2, Math.min(LOWMEM ? 3 : 8, (navigator.hardwareConcurrency || 4) - 1));
 const pool = []; let poolPk = null, msgId = 0;
 function poolCall(w, msg, transfer){ return new Promise((res, rej) => { const id = ++msgId; msg.id = id;
-  const on = e => { const d = e.data; if(d.id !== id && d.type !== 'error') return; w.removeEventListener('message', on);
+  const end = () => { clearTimeout(dog); w.removeEventListener('message', on); w.removeEventListener('error', er); };
+  const on = e => { const d = e.data; if(d.id !== id && d.type !== 'error') return; end();
     if(d.type === 'error') rej(new Error(d.message)); else res(d); };
-  w.addEventListener('message', on); w.postMessage(msg, transfer || []); }); }
+  const er = e => { end(); rej(new Error('A worker crashed' + (e && e.message ? ': ' + e.message : ' (probably out of memory)'))); };
+  const dog = setTimeout(() => { end(); rej(new Error('A worker stopped responding (probably out of memory)')); }, 240000);
+  w.addEventListener('message', on); w.addEventListener('error', er); w.postMessage(msg, transfer || []); }); }
+function resetPool(){ for(const w of pool) w.terminate(); pool.length = 0; poolPk = null; poolMoon = null; }
 /* ------------------------------------------------------------ moon deep-zoom detail patches
    When you stop moving close to the surface, the visible area is rendered again at up to ~100K-equivalent
    resolution and blended onto the globe, so zooming in shows real craters instead of blocky texels. */
@@ -1224,7 +1232,7 @@ const patch = { timer:0, busy:false, again:false, tex:null };
 function patchOff(){ clearTimeout(patch.timer); PU.patchOn.value = 0; }
 function schedulePatch(){ clearTimeout(patch.timer);
   if(S.world !== 'moon' || !S.moonF || !S.moonP || spin) return;
-  if(camera.position.length() > 2.0){ PU.patchOn.value = 0; return; }
+  if(camera.position.length() > 2.6){ PU.patchOn.value = 0; return; }
   patch.timer = setTimeout(updatePatch, 400); }
 async function updatePatch(){
   if(S.busy){ schedulePatch(); return; }
@@ -1235,7 +1243,7 @@ async function updatePatch(){
   const half = (d-1)*tv*Math.max(camera.aspect, 1)*1.25 + 0.002;         // surface half-size of the view (radians)
   const PS = Math.min(innerWidth, innerHeight) < 700 ? 1024 : 1536;
   const OW = Math.min(262144, Math.round(PS*Math.PI/half/2)*2), OH = OW/2;
-  if(OW < 6500){ PU.patchOn.value = 0; return; }                         // the 4K preview is sharp enough here
+  if(OW < (S.previewW || 4096)*1.5){ PU.patchOn.value = 0; return; }     // the preview is sharp enough here
   const lat = (hit.uv.y-0.5)*Math.PI, cl = Math.max(Math.cos(lat), 0.05);
   const BW = Math.min(OW, Math.round(PS/cl), Math.round(PS*2.5)), BH = Math.min(OH, PS);
   const xa = ((Math.floor(hit.uv.x*OW - BW/2) % OW) + OW) % OW, y0 = Math.max(0, Math.min(OH-BH, Math.round((1-hit.uv.y)*OH - BH/2)));
@@ -1283,13 +1291,17 @@ async function generate(){
   const t0 = performance.now();
   try{
     if(S.world === 'moon'){
-      if(!S.moonF) await moonAnalyze();
-      const P = moonParams(), OW = 4096, OH = 2048; const cv = makeCanvas(OW, OH), cx = cv.getContext('2d');
-      await moonRender(OW, OH, false, (out, y0, y1) => cx.putImageData(new ImageData(out, OW, y1-y0), 0, y0), P);
-      setGlobe(cv, null, null); controls.minDistance = 1.1; S.moonP = P; patchOff(); schedulePatch();
+      const P = moonParams(), OW = LOWMEM ? 2048 : 4096, OH = OW/2; const cv = makeCanvas(OW, OH), cx = cv.getContext('2d');
+      for(;;){
+        try{ if(!S.moonF) await moonAnalyze();
+          await moonRender(OW, OH, false, (out, y0, y1) => cx.putImageData(new ImageData(out, OW, y1-y0), 0, y0), P); break; }
+        catch(err){ if(moonCap <= 1024) throw err;
+          console.warn(err); moonCap /= 2; S.moonF = null; resetPool(); status('Low memory — retrying with a lighter analysis (' + moonCap + ' px)…'); }
+      }
+      setGlobe(cv, null, null); controls.minDistance = 1.1; S.moonP = P; S.previewW = OW; patchOff(); schedulePatch();
       $('mapAfter').getContext('2d').drawImage(cv, 0, 0, 2048, 1024);
       S.dirty = false; $('gen').textContent = 'Regenerate';
-      status('Done in ' + ((performance.now()-t0)/1000).toFixed(1) + ' s · preview 4096×2048 · zoom in to see craters · export up to 16K');
+      status('Moon engine v2 · done in ' + ((performance.now()-t0)/1000).toFixed(1) + ' s · preview ' + OW + '×' + OH + ' · zoom in for full detail · export up to 16K');
       window.__lastGen = {ok:true, ms:performance.now()-t0};
       prog(null); S.busy = false; $('gen').disabled = false; return;
     }
@@ -1307,7 +1319,7 @@ async function generate(){
     S.dirty = false; $('gen').textContent = 'Regenerate';
     status('Done in ' + ((performance.now()-t0)/1000).toFixed(1) + ' s · preview 2048×1024 · export up to 16K');
     window.__lastGen = {ok:true, ms:performance.now()-t0};
-  }catch(e){ console.error(e); status('Something went wrong: ' + e.message); window.__lastGen = {ok:false, error:e.message}; }
+  }catch(e){ console.error(e); resetPool(); status('⚠ Generation failed: ' + e.message + ' — try a smaller map or close other apps'); window.__lastGen = {ok:false, error:e.message}; }
   prog(null); S.busy = false; $('gen').disabled = false;
 }
 $('gen').onclick = generate;
@@ -1329,7 +1341,7 @@ async function exportImage(height){
     if(!blob) throw new Error('The browser could not encode an image this large. Try a smaller size.');
     save(blob, (S.imgName || 'planet') + (height ? '_height_' : (S.world === 'moon' ? '_moon_' : '_earthlike_')) + (OW >= 16000 ? '16k' : OW/1024 + 'k') + '.png');
     status('Saved ' + OW + '×' + OH + (height ? ' height map' : ' texture')); window.__lastExport = {ok:true, size:blob.size};
-  }catch(e){ console.error(e); status('Export failed: ' + e.message); window.__lastExport = {ok:false, error:e.message}; }
+  }catch(e){ console.error(e); resetPool(); status('⚠ Export failed: ' + e.message + (S.outRes > 4096 ? ' — try a smaller size' : '')); window.__lastExport = {ok:false, error:e.message}; }
   prog(null); S.busy = false;
 }
 $('exportTex').onclick = () => exportImage(false);
