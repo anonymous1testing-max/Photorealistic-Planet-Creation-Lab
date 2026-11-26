@@ -28,8 +28,9 @@
   .dock button.on{background:rgba(78,163,255,.18);color:var(--text)}
   .dock .go{background:var(--accent2);color:#fff;min-width:96px;font-size:13.5px}
   .dock .go:disabled{opacity:.5}
-  .dock .go.need{animation:needgen 1.6s ease-in-out infinite}
-  @keyframes needgen{0%,100%{box-shadow:0 0 0 0 rgba(78,163,255,.0)}50%{box-shadow:0 0 0 5px rgba(78,163,255,.55)}}
+  .dock .go.need{animation:needgen 1.6s ease-in-out infinite;background:#e08a1e}
+  .dock .go.need::after{content:' ●';font-size:10px;vertical-align:2px}
+  @keyframes needgen{0%,100%{box-shadow:0 0 0 0 rgba(224,138,30,0)}50%{box-shadow:0 0 0 6px rgba(224,138,30,.55)}}
   .sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(max(12px,env(safe-area-inset-bottom)) + 66px);width:min(430px,calc(100vw - 16px));max-height:min(62vh,560px);overflow:auto;background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:6px 16px 14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:5;display:none}
   .sheet.open{display:block}
   .sheet h2{margin:10px 0 2px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -94,6 +95,7 @@
   #pvBusy{position:absolute;right:7px;bottom:6px;font-size:11px;color:#fff;background:rgba(0,0,0,.62);padding:2px 8px;border-radius:7px;display:none;pointer-events:none}
   #pvInfo{margin:6px 3px 0;font-size:12px;line-height:1.35;color:var(--muted);min-height:2.7em}
   #pvInfo b{color:var(--text);font-weight:650}
+  .row.xtra.off{opacity:.45}
   #pvOpen{position:fixed;left:50%;transform:translateX(-50%);top:62px;z-index:7;display:none;border:1px solid var(--line);background:var(--accent2);color:#fff;border-radius:999px;min-height:34px;padding:0 14px;font:inherit;font-size:12.5px;font-weight:650;cursor:pointer}
   body.hideui #pv,body.hideui #pvOpen{display:none!important}
   body.pvon #status{display:none}
@@ -153,21 +155,21 @@
   <div class="row"><div class="lab"><span>Sharpen my craters</span><span id="v-enhance"></span></div><div class="hint">Makes the rims of your own craters crisper, using only your map's pixels. 0 = leave them as they are</div><input id="enhance" type="range" min="0" max="2" step="0.05" value="1"></div>
   <div class="row"><div class="lab"><span>How many of my craters to sharpen</span><span id="v-detect"></span></div><div class="hint">Higher also sharpens fainter craters, but may pick up crater-like spots that aren't craters</div><input id="detect" type="range" min="0" max="1" step="0.05" value="0.25"></div>
   <div class="row"><div class="lab"><span>Remove noise &amp; blockiness</span><span id="v-soften"></span></div><div class="hint">Cleans grain, speckles and JPEG blocks out of your map, keeping its real features</div><input id="soften" type="range" min="0" max="1" step="0.05" value="0.8"></div>
-  <h2>Light &amp; look</h2>
-  <div class="row"><div class="lab"><span>Sun direction</span><span id="v-sunAz"></span></div><div class="hint">Which side craters are lit from. Only affects added extras and fine bumps; your own craters keep the lighting you drew</div><input id="sunAz" type="range" min="0" max="360" step="5" value="135"></div>
-  <div class="row"><div class="lab"><span>Sun height</span><span id="v-sunEl"></span></div><div class="hint">Low sun = long shadows and strong relief; high sun = flatter, full-Moon look</div><input id="sunEl" type="range" min="10" max="80" step="1" value="40"></div>
-  <div class="row"><div class="lab"><span>Bumpiness</span><span id="v-mrelief"></span></div><div class="hint">How 3D the fine surface bumps (and any added craters) look. 0 = flat</div><input id="mrelief" type="range" min="0" max="2" step="0.05" value="0.7"></div>
-  <div class="row"><div class="lab"><span>Dark plains edge sharpness</span><span id="v-mareSharp"></span></div><div class="hint">How crisply your dark plains (maria) meet the bright highlands</div><input id="mareSharp" type="range" min="0" max="2" step="0.05" value="1"></div>
+  <div class="row"><div class="lab"><span>Real Moon surface detail</span><span id="v-realDetail"></span></div><div class="hint">Fills in the fine detail your map can't show, copied from real Moon photos: real highland texture on your highlands, real mare texture on your dark plains. Your own shapes stay. 0 = off</div><input id="realDetail" type="range" min="0" max="2" step="0.05" value="1"></div>
+  <h2>Look</h2>
+        <div class="row"><div class="lab"><span>Dark plains edge sharpness</span><span id="v-mareSharp"></span></div><div class="hint">How crisply your dark plains (maria) meet the bright highlands</div><input id="mareSharp" type="range" min="0" max="2" step="0.05" value="1"></div>
   <div class="row"><div class="lab"><span>Real Moon brightness</span><span id="v-matchMoon"></span></div><div class="hint">Pulls the brightness of your dark plains and bright highlands toward the real Moon's. 0 = keep your tones</div><input id="matchMoon" type="range" min="0" max="1" step="0.05" value="0.7"></div>
   <div class="row"><div class="lab"><span>Fine dusty grain</span><span id="v-grain"></span></div><div class="hint">Very fine sandy speckle, only visible up close. 0 = none</div><input id="grain" type="range" min="0" max="2" step="0.05" value="1"></div>
   <h2>Optional extras (not from your map)</h2>
   <div class="row"><div class="lab"><span>Add extra craters</span><span id="v-craterDensity"></span></div><div class="hint">Adds made-up craters of every size on top of yours. 0 = off (only your craters)</div><input id="craterDensity" type="range" min="0" max="1" step="0.02" value="0"></div>
-  <div class="row"><div class="lab"><span>Biggest added crater</span><span id="v-craterMax"></span></div><div class="hint">Size of the largest added craters, in pixels of your map. Only with extra craters on</div><input id="craterMax" type="range" min="2" max="40" step="1" value="24"></div>
-  <div class="row"><div class="lab"><span>Keep dark plains smoother</span><span id="v-mareCraters"></span></div><div class="hint">Puts fewer added craters on the dark plains, like the real Moon. Only with extra craters on</div><input id="mareCraters" type="range" min="0" max="1" step="0.05" value="1"></div>
-  <div class="row"><div class="lab"><span>Crater shadows</span><span id="v-shadows"></span></div><div class="hint">Darkness of the shadows inside added craters. Only with extra craters on</div><input id="shadows" type="range" min="0" max="1.5" step="0.05" value="0.7"></div>
+  <div class="row xtra"><div class="lab"><span>Biggest added crater</span><span id="v-craterMax"></span></div><div class="hint">Size of the largest added craters, in pixels of your map. Only with extra craters on</div><input id="craterMax" type="range" min="2" max="40" step="1" value="24"></div>
+  <div class="row xtra"><div class="lab"><span>Keep dark plains smoother</span><span id="v-mareCraters"></span></div><div class="hint">Puts fewer added craters on the dark plains, like the real Moon. Only with extra craters on</div><input id="mareCraters" type="range" min="0" max="1" step="0.05" value="1"></div>
+  <div class="row xtra"><div class="lab"><span>Crater shadows</span><span id="v-shadows"></span></div><div class="hint">Darkness of the shadows inside added craters. Only with extra craters on</div><input id="shadows" type="range" min="0" max="1.5" step="0.05" value="0.7"></div>
   <div class="row"><div class="lab"><span>Add bright young craters &amp; rays</span><span id="v-brightCraters"></span></div><div class="hint">Adds a few fresh white craters with long bright streaks. 0 = off</div><input id="brightCraters" type="range" min="0" max="2" step="0.05" value="0"></div>
-  <div class="row"><div class="lab"><span>Add real Moon texture</span><span id="v-realDetail"></span></div><div class="hint">Blends in fine texture from a real Moon photo, which includes real tiny craters. 0 = off</div><input id="realDetail" type="range" min="0" max="2" step="0.05" value="0"></div>
   <div class="row"><div class="lab"><span>Add ridges on dark plains</span><span id="v-ridges"></span></div><div class="hint">Adds low winding ridges across the dark plains. 0 = off</div><input id="ridges" type="range" min="0" max="2" step="0.05" value="0"></div>
+<div class="row xtra"><div class="lab"><span>Sun direction</span><span id="v-sunAz"></span></div><div class="hint">Which side added craters are lit from. Your own craters keep the lighting you drew</div><input id="sunAz" type="range" min="0" max="360" step="5" value="135"></div>
+<div class="row xtra"><div class="lab"><span>Sun height</span><span id="v-sunEl"></span></div><div class="hint">For added craters: low sun = long shadows; high sun = flatter, full-Moon look</div><input id="sunEl" type="range" min="10" max="80" step="1" value="40"></div>
+<div class="row xtra"><div class="lab"><span>Bumpiness</span><span id="v-mrelief"></span></div><div class="hint">How 3D added craters look. 0 = flat</div><input id="mrelief" type="range" min="0" max="2" step="0.05" value="0.7"></div>
   <div class="row"><div class="lab"><span>Random layout</span><span></span></div><div class="seg"><input id="mseed" type="number" value="7" style="flex:1"><button class="btn" id="mreseed" style="flex:0 0 auto">Shuffle</button></div><div class="hint" style="margin-top:4px">Changes where added extras and fine bumps go</div></div>
 </div>
 
@@ -461,8 +463,8 @@ function analyze(inp, hmap, P, progress, lut){
   { const r = flowAndErode(h, sea, W, H, 0, 0.5, false); const f = r.f;
     for(let i=0;i<N;i++) if(terr[i] && f[i] - h[i] > 0.004) lake[i] = 1; }
   let hmx = 1e-6; { const s = []; for(let i=0;i<N;i+=3) if(terr[i]) s.push(h[i]); s.sort((a,b)=>a-b); hmx = s.length ? s[Math.floor(s.length*0.998)] || 1 : 1; }
-  // never stretch low land into peaks: heights are measured against a fixed mountain height, not only the tallest point
-  hmx = Math.max(hmx, 1.55);
+  // heights are measured against a fixed mountain height, so more mountains really are taller (and none means none)
+  hmx = 2.5;
   for(let i=0;i<N;i++) h[i] = terr[i] ? clamp(h[i]/hmx,0,1) : 0;
   progress(0.68, 'Working out the climate');
   // ---- climate
@@ -775,7 +777,7 @@ function detectCraters(L0, W, H, P){
     let mean = 0; for(let a=0;a<NA;a++){ eA[a] = Math.abs(ring[2*NA+a] - ring[3*NA+a]); bI[a] = Math.abs(ring[a] - ring[NA+a]); bO[a] = Math.abs(ring[4*NA+a] - ring[5*NA+a]); mean += ring[4*NA+a]; }
     const E = med(eA), B = Math.max(med(bO), 0.6*med(bI)) + 0.8; let cov = 0; for(let a=0;a<NA;a++) if(eA[a] > 1.2*B) cov++;
     return {E, B, cov: cov/NA, mean: mean/NA}; };
-  const sens = clamp(P.detect == null ? 0.5 : P.detect, 0, 1), kE = 2.3 - 1.1*sens, kC = 0.62 - 0.22*sens;
+  const sens = clamp(P.detect == null ? 0.5 : P.detect, 0, 1)*0.6, kE = 2.3 - 1.1*sens, kC = 0.62 - 0.22*sens;
   const acc2 = [];
   for(const [cx0, cy0, r0] of cand){
     let best = test(cx0, cy0, r0); if(best.E < kE*best.B || best.cov < kC*0.8) continue;
@@ -872,15 +874,27 @@ function moonAnalyze(inp, P, progress, ref, detail){
   progress(0.9, 'Preparing synthesis');
   return { W, H, L, score:blur(score,W,H,0.8), tr:blur(tr,W,H,3), tb:blur(tb,W,H,3), own, ref, detail: detail || null, det: D.craters, ndet: D.n, detSun: D.sunAz };
 }
+/* Real-Moon detail source: the fine band of a real Moon mosaic (normalised by local brightness), plus lists of
+   tile centres that lie fully inside real highlands and fully inside real maria, away from the poles.
+   Fine detail is copied from the matching kind of terrain, so your highlands get real highland texture and
+   your maria get real mare texture; your own map keeps every larger shape. */
 function moonDetailBand(F, P, OW){
   const D = F.detail; if(!D) return null;
-  const key = OW + ':' + F.W; if(F._band && F._bandKey === key) return F._band;
-  const dW = D.W, dH = D.H, k = clamp(OW/dW, 1, 2);            // detail texel ≈ 1–2 output px: always crisp
-  const inPxTex = OW/F.W/k;                                     // one input px in detail texels
-  const sig = clamp(inPxTex*0.6, 0.8, 4);                       // keep only features finer than the input can show
-  const L = D.L, lo = blur(L, dW, dH, sig), base = blur(L, dW, dH, Math.max(4, sig*6)), band = new Float32Array(dW*dH);
-  for(let i=0;i<band.length;i++) band[i] = (L[i]-lo[i])/Math.max(base[i], 20);
-  F._band = band; F._bandKey = key; return band;
+  if(F._ex) return F._ex;
+  const dW = D.W, dH = D.H, L = D.L;
+  // three detail bands (fine, medium, coarse); each zoom layer uses the band that needs the least magnification
+  const g1 = blur(L, dW, dH, 0.9), g2 = blur(L, dW, dH, 1.8), g3 = blur(L, dW, dH, 3.6), g4 = blur(L, dW, dH, 7.2), base = blur(L, dW, dH, 12);
+  const bands = [new Float32Array(dW*dH), new Float32Array(dW*dH), new Float32Array(dW*dH)];
+  for(let i=0;i<dW*dH;i++){ const bs = Math.max(base[i], 25); bands[0][i] = (L[i]-g2[i])/bs; bands[1][i] = (g2[i]-g3[i])/bs*1.25; bands[2][i] = (g3[i]-g4[i])/bs*1.5; }
+  const band = bands[0];
+  // coarse class map of the real Moon
+  const Lc = blur(L, dW, dH, 8); const thr = otsu(Lc, null);
+  const R = 40, st = 8, hi = [], ma = [];
+  for(let y=Math.floor(dH*0.24); y<Math.ceil(dH*0.76); y+=st) for(let x=0; x<dW; x+=st){
+    let nH = 0, nM = 0;
+    for(let dy=-R; dy<=R; dy+=10) for(let dx=-R; dx<=R; dx+=10){ const v = Lc[clamp(y+dy,0,dH-1)*dW + ((x+dx)%dW+dW)%dW]; if(v >= thr+6) nH++; else if(v < thr-6) nM++; }
+    const n = 81; if(nH === n) hi.push(x, y); else if(nM === n) ma.push(x, y); }
+  F._ex = {band, bands, dW, dH, hi:Float32Array.from(hi), ma:Float32Array.from(ma)}; return F._ex;
 }
 /* integer hash + step for crater randoms */
 function ihash(x, y, z, s){ let h = Math.imul(x, 0x27d4eb2d) ^ Math.imul(y, 0x165667b1) ^ Math.imul(z, 0x9e3779b1) ^ Math.imul(s, 0x85ebca6b);
@@ -904,7 +918,7 @@ function moonCraterLayers(P, W, OW){
 /* Renders output rows y0..y1 of an OW×OH moon map. With xa/bw only columns xa..xa+bw-1 (wrapping) are rendered,
    which is how the globe shows deep-zoom detail patches without rendering the whole planet at that size. */
 function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
-  const band = (P.realDetail > 0 && !heightOut) ? moonDetailBand(F, P, OW) : null; const dW = F.detail ? F.detail.W : 1, dH = F.detail ? F.detail.H : 1;
+  const EX = (P.realDetail > 0 && !heightOut) ? moonDetailBand(F, P, OW) : null;
   const BW = (bw > 0 && bw < OW) ? bw : OW, XA = BW === OW ? 0 : (((xa|0) % OW) + OW) % OW;
   const W = F.W, H = F.H, nR = y1-y0, NP = nR*BW, out = new Uint8ClampedArray(NP*4);
   const S = P.seed|0, PI2 = 2*PI;
@@ -1070,7 +1084,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
   if(F.det && F.det.length && P.enhance > 0){ const dk = F.det, L = {det:true, reachK:2, rays:false, lv:99, c:1, rMin:0, rMax:0, R:0, f:0, a:0, w:0};
     for(let n=0; n<dk.length; n+=7){ const lon = dk[n], lat = dk[n+1], R = dk[n+2];
       if(Math.abs(Math.sin(lat) - (pyHiB+pyLoB)/2) > (pyHiB-pyLoB)/2 + 2.2*R) continue;
-      L.R = R; L.f = 0; L.w = clamp(1.7*inPx/R, 0.07, 0.4); L.a = 1.6*P.enhance;
+      L.R = R; L.f = 0; L.w = clamp(1.7*inPx/R, 0.07, 0.4); L.a = 0.9*Math.min(P.enhance, 1.4);
       const c0 = Math.cos(lat); splat(c0*Math.cos(lon), Math.sin(lat), c0*Math.sin(lon), L, ihash(n, 7, 3, S)); } }
   // ---- 2) optional extra craters (off unless you turn them on)
   for(const L of CL.layers){
@@ -1113,6 +1127,28 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
   const fW = W/60, wrW = 0.17, wrA = 0.13*P.ridges, wrE = 0.2*wrW/fW;
   const fM = OW/(PI2*5), eM = PI2/OW, fG = OW/(PI2*1.6);
   const Rmax = CL.Rmax;
+  // real-Moon detail, layered octave by octave from the finest output pixel up to the size of one pixel of your map
+  const exLayers = [];
+  if(EX){ const q = 1.25; let M = q; const top = OW/W*1.15;
+    for(let l=0; l<7 && M < top; l++){ const k = Math.min(2, Math.max(0, Math.floor(Math.log2(M/q)/2 + 0.25))); exLayers.push([M/Math.pow(2, k), k]); M *= 2; } }
+  const EXC = 56;                                              // tile size in source texels
+  function exTile(l, i, j, kind){ // a real-Moon tile centre for cell (i, j) of layer l, of the right terrain kind
+    const list = kind ? EX.ma : EX.hi, h = ihash(i, j, l, S*31+kind), n = list.length >> 1;
+    if(!n) return null; const k = (h % n)*2; return [list[k], list[k+1]]; }
+  function exSamp(b, X, Y){ const dW = EX.dW, dH = EX.dH; const xi = Math.floor(X), yi = Math.floor(Y), tx = X-xi, ty = Y-yi;
+    const xa = ((xi%dW)+dW)%dW, xb = (xa+1)%dW, ya = clamp(yi,0,dH-1)*dW, yb = clamp(yi+1,0,dH-1)*dW;
+    return (b[ya+xa]*(1-tx)+b[ya+xb]*tx)*(1-ty) + (b[yb+xa]*(1-tx)+b[yb+xb]*tx)*ty; }
+  function exDetail(x, y, cl, mare){ let sum = 0;
+    for(let l=0; l<exLayers.length; l++){ const M = exLayers[l][0], bd = EX.bands[exLayers[l][1]];
+      const u = (x + 0.5)/M, v = (y + 0.5)/M;
+      const cu = u/EXC - 0.5, cv = v/EXC - 0.5, i0 = Math.floor(cu), j0 = Math.floor(cv), tu = cu - i0, tv = cv - j0;
+      const wu = tu*tu*(3-2*tu), wv = tv*tv*(3-2*tv);
+      let acc = 0, ww = 0;
+      for(let dj=0; dj<2; dj++) for(let di=0; di<2; di++){ const w = (di ? wu : 1-wu)*(dj ? wv : 1-wv); if(w < 1e-3) continue;
+        const i = i0+di, j = j0+dj, kind = mare > 0.5 ? 1 : 0, c = exTile(l, i, j, kind); if(!c) continue;
+        acc += w*exSamp(bd, c[0] + (u - (i+0.5)*EXC), c[1] + (v - (j+0.5)*EXC)); ww += w*w; }
+      sum += ww > 0 ? acc/Math.sqrt(ww) : 0; }
+    return sum*0.85; }
   for(let y=y0;y<y1;y++){
     const ry = y-y0, cl = rCl[ry], sl = rSl[ry], fy = (y+0.5)*H/OH;
     for(let j=0;j<BW;j++){ const x = XA+j < OW ? XA+j : XA+j-OW;
@@ -1122,7 +1158,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
       let wfx = fx, wfy = fy;
       if(wOct > 0){ let ax = 0, ay = 0, am = 1, fr = wF0;
         for(let o=0;o<wOct;o++){ ax += am*pnoise(px*fr+o*1.7, py*fr, pz*fr, S+90+o); ay += am*pnoise(px*fr-3.1, py*fr+o*2.3, pz*fr+5.7, S+97+o); am *= 0.52; fr *= 2.13; }
-        wfx += ax*0.75; wfy += ay*0.75; }
+        wfx += ax*0.4; wfy += ay*0.4; }
       if(DW[pi] > 0){ wfx += DXW[pi]; wfy += DYW[pi]; }
       let Lv = cub(F.L, wfx, wfy);
       const s0 = bil(F.score, wfx, wfy);
@@ -1151,7 +1187,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
       const m0 = pnoise(px*fM, py*fM, pz*fM, S+80) + 0.5*pnoise(px*fM*2.1, py*fM*2.1, pz*fM*2.1, S+81);
       const exs = (-sL*Lx - sl*cL*Ly)*eM, eys = cl*Ly*eM, ezs = (cL*Lx - sl*sL*Ly)*eM;
       const m1 = pnoise((px+exs)*fM, (py+eys)*fM, (pz+ezs)*fM, S+80) + 0.5*pnoise((px+exs)*fM*2.1, (py+eys)*fM*2.1, (pz+ezs)*fM*2.1, S+81);
-      const micro = (m1-m0)/(eM*fM)*0.03*(1-0.5*mare)*rel*P.grain;
+      const micro = (m1-m0)/(eM*fM)*0.03*(1-0.5*mare)*rel*P.grain*(EX ? 0.35 : 1);
       if(heightOut){
         const hv = 150 + 105*HS[pi]/(Rmax*0.42) - 28*mare + 3*m0;
         const o = pi*4; out[o] = out[o+1] = out[o+2] = hv; out[o+3] = 255; continue; }
@@ -1162,15 +1198,7 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
       const grain = (pnoise(px*fG, py*fG, pz*fG, S+7)*0.6 + pnoise(px*fG*2.3, py*fG*2.3, pz*fG*2.3, S+8)*0.4)*0.022 + hash3(x,y,S,77)*0.008;
       // fine real-Moon texture (regolith and small craters), crisp at any output size
       let rd = 0;
-      if(band){ const kk = clamp(OW/dW, 1, 2), sx = (x+0.5)/kk, sy = (y+0.5)/kk;
-        const samp2 = (ox, oy) => { const X = sx+ox, Y = sy+oy; const xi = Math.floor(X), yi = Math.floor(Y), fx_ = X-xi, fy_ = Y-yi;
-          const y0b = Math.floor(dH*0.25), hb = Math.floor(dH*0.5);
-          const my = j => { let t = ((j % (2*hb)) + 2*hb) % (2*hb); if(t >= hb) t = 2*hb-1-t; return (y0b + t)*dW; };
-          const xa = ((xi%dW)+dW)%dW, xb = (xa+1)%dW, ya = my(yi), yb = my(yi+1);
-          return (band[ya+xa]*(1-fx_)+band[ya+xb]*fx_)*(1-fy_) + (band[yb+xa]*(1-fx_)+band[yb+xb]*fx_)*fy_; };
-        const w = clamp(0.5 + 1.2*fbm(px,py,pz, 6, 2, 0.5, S+60), 0, 1);
-        rd = samp2(dW*0.37, dH*0.21)*w + samp2(dW*0.71, dH*0.63)*(1-w);
-        rd *= 0.5*P.realDetail*(1 - 0.5*mare); }
+      if(EX) rd = exDetail(x, y, cl, mare) * P.realDetail;
       const alb = ALB[pi]*P.brightCraters*(1 - mare*0.15);
       let v = Lv * (1 + rd + alb) * shade * SHD[pi] * (1 + grain*P.grain);
       // soft highlight roll-off
@@ -1185,8 +1213,8 @@ function moonSynthRows(F, P, OW, OH, y0, y1, heightOut, xa, bw){
   }
   return out;
 }
-const MOON_DEFAULTS = { seed:7, soften:0.8, mareSharp:1.0, mareCraters:1.0, craterDensity:0, realDetail:0, enhance:1, detect:0.25, mareMinArea:0.0015, craterMax:24,
-  relief:0.7, brightCraters:0, grain:1.0, matchMoon:0.7, moonTint:0.5, sunAz:135, sunEl:40, shadows:0.7, ridges:0 };
+const MOON_DEFAULTS = { seed:7, soften:0.8, mareSharp:1.0, mareCraters:1.0, craterDensity:0, realDetail:1, enhance:1, detect:0.25, mareMinArea:0.0015, craterMax:24,
+  relief:0.7, brightCraters:0, grain:0.3, matchMoon:0.7, moonTint:0.5, sunAz:135, sunEl:40, shadows:0.7, ridges:0 };
 
 
 const DEFAULTS = { radiusKm:7002, waterThr:12, iceLat:22, calm:0.6, mountains:1.0, erosionIters:12, erosionK:0.05,
@@ -1254,6 +1282,9 @@ for(const k of MOON_SLIDERS){ const el = $(k); const show = () => { $('v-'+k).te
   el.addEventListener('input', () => { show(); if(MOON_REANALYZE.has(k)) S.moonF = null; markDirty(); }); show(); }
 $('mseed').addEventListener('change', markDirty);
 $('mreseed').onclick = () => { $('mseed').value = Math.floor(Math.random()*9999); markDirty(); };
+function moonExtrasSync(){ const on = parseFloat($('craterDensity').value) > 0 || parseFloat($('brightCraters').value) > 0;
+  document.querySelectorAll('#sh-moon .row.xtra').forEach(r => r.classList.toggle('off', !on)); }
+['craterDensity','brightCraters'].forEach(k => $(k).addEventListener('input', moonExtrasSync)); moonExtrasSync();
 function moonParams(){ const P = Object.assign({}, PTS.MOON_DEFAULTS);
   for(const k of MOON_SLIDERS) P[k === 'mrelief' ? 'relief' : k] = parseFloat($(k).value);
   P.seed = (+$('mseed').value|0) || 1; return P; }
@@ -1628,16 +1659,25 @@ function pvAim(force){
   let u = pv.u, v = pv.v;
   if(S.view === 'globe'){ const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2(0, 0), camera); const hit = ray.intersectObject(globe)[0]; if(hit && hit.uv){ u = hit.uv.x; v = hit.uv.y; } }
   else if(force){ u = 0.5; v = 0.5; }
-  if(S.world !== 'moon' && S.img){
+  if(S.img){
     if(!pv.thumb) pv.thumb = pixelsOf(S.img, 256, 128);
-    const t = pv.thumb, land = (x, y) => { const i = (y*256 + ((x%256)+256)%256)*4, r = t[i], g = t[i+1], b = t[i+2]; return !(b > r + 12 && b > g*0.88) && Math.min(r,g,b) < 170; };
+    const t = pv.thumb, lum = (x, y) => { const i = (Math.max(0, Math.min(127, y))*256 + ((x%256)+256)%256)*4; return 0.3*t[i] + 0.59*t[i+1] + 0.11*t[i+2]; };
     const cx = Math.floor(u*256), cy = Math.min(127, Math.floor((1-v)*128));
-    // prefer a spot a little inland (land all around), so both halves of the split show land
-    const inland = (x, y) => { for(let dy=-5;dy<=5;dy+=1) for(let dx=-5;dx<=5;dx++) if(!land(x+dx, Math.max(0, Math.min(127, y+dy)))) return false; return true; };
-    if(!inland(cx, cy)){ let best = null, bd = 1e9;
-      for(let pass=0; pass<2 && !best; pass++) for(let y=10;y<118;y++) for(let x=0;x<256;x++){ if(pass ? !land(x, y) : !inland(x, y)) continue;
-        const dx = Math.min(Math.abs(x-cx), 256-Math.abs(x-cx)), dy = y-cy, dd = dx*dx + dy*dy*2; if(dd < bd){ bd = dd; best = [x, y]; } }
-      if(best){ u = (best[0]+0.5)/256; v = 1 - (best[1]+0.5)/128; } } }
+    let best = null, bs = -1e9;
+    if(S.world === 'moon'){
+      // a spot with something to see: strong local detail (craters, plains edges), close to where you are looking
+      for(let y=16;y<112;y+=2) for(let x=0;x<256;x+=2){ let g = 0;
+        for(let dy=-4;dy<=4;dy+=2) for(let dx=-6;dx<=6;dx+=2) g += Math.abs(lum(x+dx+1, y+dy) - lum(x+dx-1, y+dy)) + Math.abs(lum(x+dx, y+dy+1) - lum(x+dx, y+dy-1));
+        const ddx = Math.min(Math.abs(x-cx), 256-Math.abs(x-cx)), dd = Math.sqrt(ddx*ddx + (y-cy)*(y-cy)*2), sc = g - dd*6;
+        if(sc > bs){ bs = sc; best = [x, y]; } } }
+    else {
+      const land = (x, y) => { const i = (Math.max(0, Math.min(127, y))*256 + ((x%256)+256)%256)*4, r = t[i], g = t[i+1], b = t[i+2]; return !(b > r + 12 && b > g*0.88) && Math.min(r,g,b) < 170; };
+      // the most land-filled spot (the preview is 16:9) near where you are looking
+      for(let y=12;y<116;y+=2) for(let x=0;x<256;x+=2){ let n = 0;
+        for(let dy=-4;dy<=4;dy+=2) for(let dx=-8;dx<=8;dx+=2) if(land(x+dx, y+dy)) n++;
+        const ddx = Math.min(Math.abs(x-cx), 256-Math.abs(x-cx)), dd = Math.sqrt(ddx*ddx + (y-cy)*(y-cy)*2), sc = n*3 - dd;
+        if(sc > bs){ bs = sc; best = [x, y]; } } }
+    if(best){ u = (best[0]+0.5)/256; v = 1 - (best[1]+0.5)/128; } }
   pv.u = ((u % 1) + 1) % 1; pv.v = Math.max(0.02, Math.min(0.98, v)); }
 function pvMoved(){ if(!pv || !pvShown()) return; clearTimeout(pv.moveT); pv.moveT = setTimeout(() => { pvAim(false); pvRequest(true); }, 600); }
 function pvRequest(full){ if(!pv || !pvShown()) return; if(full) pv.beforeKey = ''; pv.dirty = true; if(!pv.running) pvRun(); }
