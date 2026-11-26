@@ -74,6 +74,30 @@
   @media (max-width:600px){ #worldPill button{padding:8px 8px;font-size:11.5px} .top{align-items:flex-start}  .top small{display:none} .top h1{font-size:14px;max-width:44vw} #status{top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom)) + 64px);left:12px;right:12px;max-width:none;text-align:center}
     .dock{width:calc(100vw - 12px);gap:2px;padding:5px;justify-content:space-between} .dock button{min-width:0;flex:1;padding:0 4px;font-size:11.5px} .dock .go{flex:1.4;min-width:0;font-size:12.5px}
     .pill button{padding:8px 9px;font-size:12px} .sheet{bottom:calc(max(12px,env(safe-area-inset-bottom)) + 92px)} }
+  /* live preview */
+  #pv{position:fixed;left:50%;transform:translateX(-50%);top:62px;width:min(528px,calc(100vw - 16px));background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:8px 8px 7px;z-index:7;display:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 30px rgba(0,0,0,.45)}
+  #pv.show{display:block}
+  #pv .pvh{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 2px 6px}
+  #pv .pvh b{font-size:13px;font-weight:650;white-space:nowrap}
+  #pvZoom{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+  #pvZoom button,#pvClose{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font:inherit;font-size:11.5px;font-weight:600;padding:5px 9px;border-radius:999px;cursor:pointer;min-height:28px}
+  #pvZoom button.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  #pvClose{padding:5px 10px;color:var(--text)}
+  #pvWrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#05070d;touch-action:none;cursor:grab}
+  #pvWrap canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:auto}
+  #pvAfter{clip-path:inset(0 0 0 var(--pcut,50%))}
+  #pvCut{position:absolute;top:0;bottom:0;left:var(--pcut,50%);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 6px #000;cursor:ew-resize}
+  #pvCut::after{content:"⇆";position:absolute;top:50%;left:-15px;width:32px;height:32px;margin-top:-16px;border-radius:50%;background:var(--accent2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 1px 6px rgba(0,0,0,.6)}
+  .pvtag{position:absolute;top:6px;padding:2px 7px;border-radius:7px;background:rgba(0,0,0,.62);font-size:11px;pointer-events:none}
+  #pvBusy{position:absolute;right:7px;bottom:6px;font-size:11px;color:#fff;background:rgba(0,0,0,.62);padding:2px 8px;border-radius:7px;display:none;pointer-events:none}
+  #pvInfo{margin:6px 3px 0;font-size:12px;line-height:1.35;color:var(--muted);min-height:2.7em}
+  #pvInfo b{color:var(--text);font-weight:650}
+  #pvOpen{position:fixed;left:50%;transform:translateX(-50%);top:62px;z-index:7;display:none;border:1px solid var(--line);background:var(--accent2);color:#fff;border-radius:999px;min-height:34px;padding:0 14px;font:inherit;font-size:12.5px;font-weight:650;cursor:pointer}
+  body.hideui #pv,body.hideui #pvOpen{display:none!important}
+  body.pvon #status{display:none}
+  @media (min-width:900px){ #pv,#pvOpen{left:auto;right:462px;transform:none;width:min(528px,calc(100vw - 486px))} #pvOpen{width:auto} }
+  @media (max-width:600px){ #pv{top:56px;padding:6px} #pvInfo{font-size:11.5px;min-height:0} body.pvon .sheet{max-height:calc(100vh - 56px - (100vw - 16px)*0.5625 - 190px)} }
+  @media (max-height:520px) and (min-width:601px){ #pv{left:8px;transform:none;top:52px;width:min(46vw,440px,calc((100vh - 52px - 150px)*1.78 + 16px))} #pvInfo{min-height:0;max-height:2.7em;overflow:hidden;font-size:11px} #pv .pvh b{display:none} #pv .pvh{margin-bottom:4px} #pvZoom{flex-wrap:nowrap} #pvZoom button,#pvClose{font-size:10.5px;padding:3px 7px;min-height:24px} #pvOpen{left:8px;transform:none} .sheet{left:auto;right:8px;transform:none;width:min(420px,50vw);bottom:66px;max-height:calc(100vh - 120px)} }
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -187,6 +211,11 @@
   <button class="hab-only" data-sheet="sh-climate">Climate</button><button class="hab-only" data-sheet="sh-surface">Surface</button><button data-sheet="sh-export">Export</button><button data-sheet="sh-menu" title="Menu look">⚙</button>
 </div>
 <div id="err"></div>
+<div id="pv"><div class="pvh"><b>Live preview</b><div style="display:flex;gap:5px;align-items:center"><div id="pvZoom"></div><button id="pvClose" title="Hide the preview">✕</button></div></div>
+  <div id="pvWrap"><canvas id="pvBefore"></canvas><canvas id="pvAfter"></canvas><div id="pvCut"></div>
+    <span class="pvtag" style="left:6px">Before</span><span class="pvtag" style="right:6px">Now</span><span id="pvBusy">updating…</span></div>
+  <div id="pvInfo"></div></div>
+<button id="pvOpen">Show live preview</button>
 
 <script id="coreSrc" type="text/plain">/* Planet Texture Studio — core engine (runs in workers and in Node for testing)
    Everything here is pure JS on typed arrays. Nothing copies Earth imagery:
@@ -1067,6 +1096,13 @@ self.onmessage = e => { const d = e.data;
     else if(d.cmd === 'setmoon'){ self.moonF = d.F; self.postMessage({type:'done', id:d.id}); }
     else if(d.cmd === 'moonSynth'){ const out = PTS.moonSynthRows(self.moonF, d.P, d.OW, d.OH, d.y0, d.y1, !!d.height, d.xa|0, d.bw|0);
       self.postMessage({type:'done', id:d.id, out, y0:d.y0, y1:d.y1}, [out.buffer]); }
+    else if(d.cmd === 'pvset'){ (self.pv = self.pv || new Map()).set(d.key, {data:d.data}); self.postMessage({type:'done', id:d.id}); }
+    else if(d.cmd === 'pvdrop'){ if(self.pv) self.pv.delete(d.key); self.postMessage({type:'done', id:d.id}); }
+    else if(d.cmd === 'pvsynth'){ const en = self.pv.get(d.key); let out;
+      if(d.kind === 'moon') out = PTS.moonSynthRows(en.data, d.P, d.OW, d.OH, d.y0, d.y1, false, d.xa, d.bw);
+      else { if(!en.prep || en.prep.relief !== d.P.relief) en.prep = PTS.prepare(en.data, d.P);
+        out = PTS.synthRows(en.data, d.lut, d.P, d.OW, d.OH, d.y0, d.y1, d.src, en.prep, d.padT, d.xa, d.bw); }
+      self.postMessage({type:'done', id:d.id, out}, [out.buffer]); }
     else if(d.cmd === 'moonLearn'){ self.postMessage({type:'done', ref: PTS.moonStats(d.rgba, d.W, d.H)}); }
     else if(d.cmd === 'learn'){ self.postMessage({type:'done', lut: PTS.learnEarth(d.rgba, d.W, d.H)}); }
   }catch(err){ self.postMessage({type:'error', message: String(err && err.stack || err)}); }
@@ -1120,11 +1156,11 @@ function params(){
   P.oceanDeep = hex($('oceanDeep').value); P.oceanShelf = hex($('oceanShelf').value); P.oceanStyle = S.oceanStyle; P.keepIce = S.keepIce;
   return P;
 }
-function markDirty(){ S.dirty = true; $('gen').textContent = 'Generate'; }
+function markDirty(){ S.dirty = true; $('gen').textContent = 'Generate'; if(typeof pvRequest === 'function') pvRequest(false); }
 
 /* ------------------------------------------------------------ sheets & views */
-function closeSheets(){ document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open')); document.querySelectorAll('[data-sheet]').forEach(b => b.classList.remove('on')); }
-document.querySelectorAll('[data-sheet]').forEach(b => b.onclick = () => { const sh = $(b.dataset.sheet), open = sh.classList.contains('open'); closeSheets(); if(!open){ sh.classList.add('open'); b.classList.add('on'); } });
+function closeSheets(){ document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open')); document.querySelectorAll('[data-sheet]').forEach(b => b.classList.remove('on')); if(typeof pvSync === 'function') pvSync(); }
+document.querySelectorAll('[data-sheet]').forEach(b => b.onclick = () => { const sh = $(b.dataset.sheet), open = sh.classList.contains('open'); closeSheets(); if(!open){ sh.classList.add('open'); b.classList.add('on'); } pvSync(); });
 document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => setView(b.dataset.view));
 function setWorld(w){ S.world = w; document.body.classList.toggle('moon', w === 'moon');
   document.querySelectorAll('[data-world]').forEach(b => b.classList.toggle('on', b.dataset.world === w));
@@ -1182,7 +1218,7 @@ scene.add(atmo);
 function resize(){ const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix(); }
 addEventListener('resize', resize); resize();
 let spin = true; controls.addEventListener('start', () => spin = false);
-controls.addEventListener('change', () => schedulePatch());
+controls.addEventListener('change', () => { schedulePatch(); pvMoved(); });
 renderer.setAnimationLoop(() => { if(spin) globe.rotation.y += 0.0015; const cd = camera.position.length(); controls.rotateSpeed = Math.min(1, Math.max(0.03, (cd-1)*0.9)); controls.zoomSpeed = Math.min(1, Math.max(0.25, (cd-1)*1.2)); controls.update(); renderer.render(scene, camera); });
 window.__three = {renderer, scene, globe, mat, camera, controls, stopSpin(){ spin = false; }};
 function canvasTex(cv, srgb){ const t = new THREE.CanvasTexture(cv); t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.wrapS = THREE.RepeatWrapping; return t; }
@@ -1368,7 +1404,7 @@ async function generate(){
         catch(err){ if(moonCap <= 1024) throw err;
           console.warn(err); moonCap /= 2; S.moonF = null; resetPool(); status('Low memory — retrying with a lighter analysis (' + moonCap + ' px)…'); }
       }
-      setGlobe(cv, null, null); controls.minDistance = 1.1; S.moonP = P; S.previewW = OW; patchOff(); schedulePatch();
+      setGlobe(cv, null, null); controls.minDistance = 1.1; S.moonP = P; S.previewW = OW; patchOff(); schedulePatch(); pvGenerated(P);
       $('mapAfter').getContext('2d').drawImage(cv, 0, 0, 2048, 1024);
       S.dirty = false; $('gen').textContent = 'Regenerate';
       status('Moon engine v2 · done in ' + ((performance.now()-t0)/1000).toFixed(1) + ' s · preview ' + OW + '×' + OH + ' · zoom in for full detail · export up to 16K');
@@ -1384,7 +1420,7 @@ async function generate(){
     // ocean shiny / land matte roughness map
     const lv = makeCanvas(1024, 512), lx = lv.getContext('2d'); lx.drawImage(hv, 0, 0, 1024, 512);
     const ld = lx.getImageData(0, 0, 1024, 512); for(let i=0;i<ld.data.length;i+=4){ const v = ld.data[i] > 0 ? 245 : 205; ld.data[i] = ld.data[i+1] = ld.data[i+2] = v; } lx.putImageData(ld, 0, 0);
-    setGlobe(cv, hv, lv); S.habP = params(); S.previewW = OW; patchOff(); schedulePatch();
+    setGlobe(cv, hv, lv); S.habP = params(); S.previewW = OW; patchOff(); schedulePatch(); pvGenerated(S.habP);
     const a = $('mapAfter'); a.getContext('2d').drawImage(cv, 0, 0);
     S.dirty = false; $('gen').textContent = 'Regenerate';
     status('Done in ' + ((performance.now()-t0)/1000).toFixed(1) + ' s · preview 2048×1024 · export up to 16K');
@@ -1435,6 +1471,118 @@ document.querySelectorAll('.sheet input[type=range]').forEach(el => {
 });
 $('hideBtn').onclick = () => { closeSheets(); document.body.classList.add('hideui'); };
 $('showBtn').onclick = () => document.body.classList.remove('hideui');
+/* ------------------------------------------------------------ live preview
+   While a settings sheet is open, a piece of the map (where you are looking on the globe) is re-rendered with the
+   current settings each time anything changes, beside how it looked at the last Generate ("Before" | "Now").
+   It runs on two workers of its own so it never waits for, or slows, the full render. */
+const PV_SHEETS = new Set(['sh-moon','sh-terrain','sh-climate','sh-surface']);
+const PV_ZOOMS = { moon:[['Wide',2048],['Close',8192],['Very close',32768]], habitable:[['Wide',2048],['Close',6144],['Very close',20480]] };
+var pv = { closed: store.get('pvClosed') === '1', world:null, zoom:0, running:false, dirty:false, beforeKey:'', u:0.5, v:0.5,
+  cache:new Map(), pool:[], sent:[], deps:[], thumb:null, label:'', hint:'', moveT:0, P0:null, pan:null };
+function pvParams(){ return S.world === 'moon' ? moonParams() : params(); }
+function pvSize(){ return Math.min(innerWidth, innerHeight) < 560 ? [384, 216] : [512, 288]; }
+function pvShown(){ return $('pv').classList.contains('show'); }
+function pvZoomButtons(){ const z = $('pvZoom'); z.innerHTML = '';
+  PV_ZOOMS[S.world === 'moon' ? 'moon' : 'habitable'].forEach(([name], i) => { const b = document.createElement('button'); b.textContent = name; b.classList.toggle('on', i === pv.zoom);
+    b.onclick = () => { pv.zoom = i; pvZoomButtons(); pvRequest(true); }; z.appendChild(b); }); }
+function pvInfo(){ const el = $('pvInfo'); el.textContent = '';
+  if(pv.label){ const b = document.createElement('b'); b.textContent = pv.label; el.appendChild(b); if(pv.hint) el.appendChild(document.createTextNode(' — ' + pv.hint)); }
+  else el.textContent = 'Move any setting below: this piece of your ' + (S.world === 'moon' ? 'moon' : 'planet') + ' updates right away. Drag the ⇆ line to compare with the last Generate, drag the picture to look around.'; }
+function pvSync(){ if(!pv) return;
+  const want = !!S.img && !pv.closed && PV_SHEETS.has((document.querySelector('.sheet.open') || {}).id);
+  $('pv').classList.toggle('show', want); document.body.classList.toggle('pvon', want);
+  $('pvOpen').style.display = (!!S.img && pv.closed && PV_SHEETS.has((document.querySelector('.sheet.open') || {}).id)) ? 'block' : 'none';
+  if(!want) return;
+  const deps = [S.img, S.lut, S.moonRef, S.heightImg, S.world];
+  if(deps.some((d, i) => d !== pv.deps[i])){ pvClearCache(); pv.deps = deps; pv.thumb = null; pv.P0 = null; pv.label = '';
+    pv.world = S.world; pv.zoom = S.world === 'moon' ? 1 : 0; pvAim(true); }
+  pvZoomButtons(); if(!pv.P0) pv.P0 = (S.world === 'moon' ? S.moonP : S.habP) || pvParams();
+  pvInfo(); pvRequest(true); }
+function pvGenerated(P){ pv.P0 = P; pv.beforeKey = ''; if(pvShown()) pvRequest(true); }
+function pvClearCache(){ for(const k of pv.cache.keys()) pv.pool.forEach((w, i) => { if(pv.sent[i].delete(k)) poolCall(w, {cmd:'pvdrop', key:k}).catch(() => {}); }); pv.cache.clear(); }
+// where to look: the centre of the globe view; for planets, moved onto the nearest land so it is never empty ocean
+function pvAim(force){
+  let u = pv.u, v = pv.v;
+  if(S.view === 'globe'){ const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2(0, 0), camera); const hit = ray.intersectObject(globe)[0]; if(hit && hit.uv){ u = hit.uv.x; v = hit.uv.y; } }
+  else if(force){ u = 0.5; v = 0.5; }
+  if(S.world !== 'moon' && S.img){
+    if(!pv.thumb) pv.thumb = pixelsOf(S.img, 256, 128);
+    const t = pv.thumb, land = (x, y) => { const i = (y*256 + ((x%256)+256)%256)*4, r = t[i], g = t[i+1], b = t[i+2]; return !(b > r + 12 && b > g*0.88) && Math.min(r,g,b) < 170; };
+    const cx = Math.floor(u*256), cy = Math.min(127, Math.floor((1-v)*128));
+    // prefer a spot a little inland (land all around), so both halves of the split show land
+    const inland = (x, y) => { for(let dy=-5;dy<=5;dy+=1) for(let dx=-5;dx<=5;dx++) if(!land(x+dx, Math.max(0, Math.min(127, y+dy)))) return false; return true; };
+    if(!inland(cx, cy)){ let best = null, bd = 1e9;
+      for(let pass=0; pass<2 && !best; pass++) for(let y=10;y<118;y++) for(let x=0;x<256;x++){ if(pass ? !land(x, y) : !inland(x, y)) continue;
+        const dx = Math.min(Math.abs(x-cx), 256-Math.abs(x-cx)), dy = y-cy, dd = dx*dx + dy*dy*2; if(dd < bd){ bd = dd; best = [x, y]; } }
+      if(best){ u = (best[0]+0.5)/256; v = 1 - (best[1]+0.5)/128; } } }
+  pv.u = ((u % 1) + 1) % 1; pv.v = Math.max(0.02, Math.min(0.98, v)); }
+function pvMoved(){ if(!pv || !pvShown()) return; clearTimeout(pv.moveT); pv.moveT = setTimeout(() => { pvAim(false); pvRequest(true); }, 600); }
+function pvRequest(full){ if(!pv || !pvShown()) return; if(full) pv.beforeKey = ''; pv.dirty = true; if(!pv.running) pvRun(); }
+async function pvRun(){ pv.running = true; $('pvBusy').style.display = 'block';
+  try{
+    while(pv.dirty && pvShown()){ pv.dirty = false;
+      const [PW, PH] = pvSize(), OW = PV_ZOOMS[S.world === 'moon' ? 'moon' : 'habitable'][pv.zoom][1], OH = OW/2;
+      const BW = PW, BH = Math.min(PH, OH), xa = ((Math.floor(pv.u*OW - BW/2) % OW) + OW) % OW, y0 = Math.max(0, Math.min(OH-BH, Math.round((1-pv.v)*OH - BH/2)));
+      const geo = {OW, OH, BW, BH, xa, y0};
+      for(const id of ['pvBefore','pvAfter']){ const c = $(id); if(c.width !== BW || c.height !== BH){ c.width = BW; c.height = BH; pv.beforeKey = ''; } }
+      const bkey = [S.world, OW, xa, y0, BW, BH, JSON.stringify(pv.P0)].join('|');
+      if(bkey !== pv.beforeKey){ await pvDraw($('pvBefore'), pv.P0, geo); pv.beforeKey = bkey; }
+      await pvDraw($('pvAfter'), pvParams(), geo);
+    }
+  }catch(e){ console.error(e); $('pvInfo').textContent = 'Preview failed: ' + e.message; window.__pv = {ok:false, error:e.message}; }
+  pv.running = false; $('pvBusy').style.display = 'none'; $('pvBusy').textContent = 'updating…'; window.__pvDone = (window.__pvDone || 0) + 1; }
+// a fast analysis of the map for the preview (cached; redone only for settings that change the analysis)
+async function pvAnalysis(P){
+  const moon = S.world === 'moon';
+  const key = moon ? ['m', P.soften, P.enhance].join('|') : ['h', P.calm, P.mountains, P.erosionIters, P.keepLayout, P.wetness, P.warmth, P.shelfKm, P.keepColor, P.keepDetail, P.radiusKm, P.seed].join('|');
+  if(pv.cache.has(key)) return {key, data: pv.cache.get(key)};
+  $('pvBusy').textContent = 'reading your map…';
+  let data;
+  if(moon){ const iw = S.img.naturalWidth, W = Math.min(1024, Math.max(512, Math.round(iw/2)*2)), H = W/2, rgba = pixelsOf(S.img, W, H), det = await getMoonDetail();
+    data = (await runWorker({cmd:'moonAnalyze', W, H, rgba, P, ref:S.moonRef, detail:{W:det.W, H:det.H, L:det.L.slice()}}, [rgba.buffer])).F; }
+  else { const W = 512, H = 256, rgba = pixelsOf(S.img, W, H); let hmap = null;
+    if(S.heightImg){ const hp = pixelsOf(S.heightImg, W, H); hmap = new Float32Array(W*H); for(let i=0;i<W*H;i++) hmap[i] = (hp[4*i]*0.299 + hp[4*i+1]*0.587 + hp[4*i+2]*0.114)/255; }
+    data = (await runWorker({cmd:'analyze', W, H, rgba, hmap, P, lut:S.lut}, [rgba.buffer])).pk; }
+  $('pvBusy').textContent = 'updating…';
+  pv.cache.set(key, data);
+  while(pv.cache.size > 3){ const old = pv.cache.keys().next().value; pv.cache.delete(old); pv.pool.forEach((w, i) => { if(pv.sent[i].delete(old)) poolCall(w, {cmd:'pvdrop', key:old}).catch(() => {}); }); }
+  return {key, data}; }
+async function pvDraw(cv, P, g){
+  const moon = S.world === 'moon', {key, data} = await pvAnalysis(P);
+  while(pv.pool.length < 2){ const w = new Worker(workerURL); w.onerror = e => console.error('preview worker', e.message); pv.pool.push(w); pv.sent.push(new Set()); }
+  await Promise.all(pv.pool.map((w, i) => pv.sent[i].has(key) ? null : poolCall(w, {cmd:'pvset', key, data}).then(() => pv.sent[i].add(key))));
+  const iw = S.img.naturalWidth, ih = S.img.naturalHeight, Pq = moon ? P : Object.assign({}, P, {srcScale: g.OW/iw});
+  const PAD = moon ? 0 : Math.max(6, Math.ceil(g.OW/iw*2) + 4), cx = cv.getContext('2d'), step = Math.ceil(g.BH/6);
+  let next = 0;
+  const job = async (w) => { while(next < g.BH){ const a = next; next += step; const b = Math.min(g.BH, a+step);
+      const msg = {cmd:'pvsynth', key, kind: moon ? 'moon' : 'planet', P:Pq, OW:g.OW, OH:g.OH, y0:g.y0+a, y1:g.y0+b, xa:g.xa, bw:g.BW, lut:S.lut}; let tr = [];
+      if(!moon){ const a0 = Math.max(0, g.y0+a-PAD), a1 = Math.min(g.OH, g.y0+b+PAD), c = makeCanvas(g.BW, a1-a0), gx = c.getContext('2d', {willReadFrequently:true});
+        gx.imageSmoothingQuality = 'high'; const sy = a0/g.OH*ih, sh = (a1-a0)/g.OH*ih, w1 = Math.min(g.BW, g.OW-g.xa);
+        gx.drawImage(S.img, g.xa/g.OW*iw, sy, w1/g.OW*iw, sh, 0, 0, w1, a1-a0);
+        if(w1 < g.BW) gx.drawImage(S.img, 0, sy, (g.BW-w1)/g.OW*iw, sh, w1, 0, g.BW-w1, a1-a0);
+        msg.src = gx.getImageData(0, 0, g.BW, a1-a0).data; msg.padT = g.y0+a-a0; tr = [msg.src.buffer]; }
+      const r = await poolCall(w, msg, tr); cx.putImageData(new ImageData(r.out, g.BW, b-a), 0, a); } };
+  await Promise.all(pv.pool.map(job)); window.__pv = {ok:true, OW:g.OW, xa:g.xa, y0:g.y0}; }
+// say which setting is changing and what it does
+document.querySelectorAll('.sheet input, .sheet .seg button').forEach(el => el.addEventListener(el.tagName === 'BUTTON' ? 'click' : 'input', () => {
+  const row = el.closest('.row'); if(!row) return; const spans = row.querySelectorAll('.lab span');
+  let val = spans[1] && spans[1].textContent; if(!val){ val = el.tagName === 'BUTTON' ? el.textContent : (el.type === 'color' ? el.value : ''); }
+  pv.label = spans[0].textContent + (val ? ': ' + val : ''); const h = row.querySelector('.hint'); pv.hint = h ? h.textContent : ''; pvInfo(); }));
+// drag the ⇆ line to compare, drag the picture to look around
+{ const wrap = $('pvWrap'); let mode = null, sx = 0, sy = 0;
+  wrap.addEventListener('pointerdown', e => { const r = wrap.getBoundingClientRect(), cut = parseFloat(wrap.style.getPropertyValue('--pcut') || '50')/100*r.width + r.left;
+    mode = Math.abs(e.clientX - cut) < 26 ? 'cut' : 'pan'; sx = e.clientX; sy = e.clientY; wrap.setPointerCapture(e.pointerId); if(mode === 'pan') wrap.style.cursor = 'grabbing'; });
+  wrap.addEventListener('pointermove', e => { if(!mode) return; const r = wrap.getBoundingClientRect();
+    if(mode === 'cut') wrap.style.setProperty('--pcut', Math.max(0, Math.min(100, (e.clientX-r.left)/r.width*100)) + '%');
+    else for(const id of ['pvBefore','pvAfter']) $(id).style.transform = 'translate(' + (e.clientX-sx) + 'px,' + (e.clientY-sy) + 'px)'; });
+  const up = e => { if(!mode) return; const r = wrap.getBoundingClientRect();
+    if(mode === 'pan' && (Math.abs(e.clientX-sx) > 3 || Math.abs(e.clientY-sy) > 3)){ const c = $('pvAfter'), OW = PV_ZOOMS[S.world === 'moon' ? 'moon' : 'habitable'][pv.zoom][1];
+      pv.u = (((pv.u - (e.clientX-sx)/r.width*c.width/OW) % 1) + 1) % 1; pv.v = Math.max(0.02, Math.min(0.98, pv.v + (e.clientY-sy)/r.height*c.height/(OW/2)));
+      pvRequest(true); setTimeout(() => { for(const id of ['pvBefore','pvAfter']) $(id).style.transform = ''; }, 30); }
+    mode = null; wrap.style.cursor = ''; };
+  wrap.addEventListener('pointerup', up); wrap.addEventListener('pointercancel', up); }
+$('pvClose').onclick = () => { pv.closed = true; store.set('pvClosed', '1'); pvSync(); };
+$('pvOpen').onclick = () => { pv.closed = false; store.set('pvClosed', '0'); pvSync(); };
 setView('globe');
 window.__ready = true;
 </script>
